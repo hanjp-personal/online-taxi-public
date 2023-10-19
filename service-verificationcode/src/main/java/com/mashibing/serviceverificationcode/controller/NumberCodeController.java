@@ -16,6 +16,7 @@ public class NumberCodeController {
         //生成验证码
         double mathrandom = (Math.random() * 9 + 1) * Math.pow(10,size-1);
         int resultInt = (int)mathrandom;
+        System.out.println("generator numbercode" + resultInt);
 
         NumberCodeResponse numberCodeResponse = new NumberCodeResponse();
         numberCodeResponse.setNumberCode(resultInt);
