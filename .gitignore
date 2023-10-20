@@ -17,3 +17,4 @@
 /service-verificationcode/src/test/java/com/mashibing/serviceverificationcode/ServiceVerificationcodeApplicationTests.java
 /.idea/
 /internal-common/target/
+/service-passenger-user/target/
