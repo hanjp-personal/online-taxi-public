@@ -22,6 +22,14 @@ public class VerificationCodeService {
     private String verificationCodeprefix = "passenger-verification-code-";
 
     /**
+     * 生成key
+     * @param passengerPhone
+     * @return
+     */
+    public String generatorKeyByPhone(String passengerPhone){
+        return verificationCodeprefix + passengerPhone;
+    }
+    /**
      * 生成验证码
      * @param passengerPhone
      * @return
@@ -34,7 +42,7 @@ public class VerificationCodeService {
         System.out.println("remote numbercode " + numberCode);
 
         //存入redis key value ttl
-        String key = verificationCodeprefix + passengerPhone;
+        String key = generatorKeyByPhone(passengerPhone);
         stringRedisTemplate.opsForValue().set(key,numberCode+"",2, TimeUnit.MINUTES);
         return ResponseResult.success("");
     }
@@ -47,7 +55,11 @@ public class VerificationCodeService {
      */
     public ResponseResult checkCode(String passengerPhone, String verificationCode){
         //根据手机号，去redis读取验证码
-        System.out.println("根据手机号，去redis读取验证码");
+        //生成key
+        String key = generatorKeyByPhone(passengerPhone);
+        //根据key获取redis中的value
+        String codeRedis = stringRedisTemplate.opsForValue().get(key);
+        System.out.println("获取的Redis中的code：" + codeRedis);
 
         //校验验证码
         System.out.println("校验验证码");
