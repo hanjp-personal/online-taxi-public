@@ -1,11 +1,12 @@
 package com.mashibing.apipassenger.service;
 
+import com.mashibing.apipassenger.remote.ServicePassengerUserClient;
 import com.mashibing.apipassenger.remote.ServiceVerificationcodeClient;
 import com.mashibing.internalcommon.Response.NumberCodeResponse;
 import com.mashibing.internalcommon.Response.TokenResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.dto.ResponseResult;
-import net.sf.json.JSONObject;
+import com.mashibing.internalcommon.request.VerificationCodeDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class VerificationCodeService {
     @Autowired
     private ServiceVerificationcodeClient serviceVerificationcodeClient;
+    @Autowired
+    private ServicePassengerUserClient servicePassengerUserClient;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -72,7 +75,10 @@ public class VerificationCodeService {
         }
 
         //判断原来是有用户，并进行对应的处理
-        System.out.println("判断原来是有用户，并进行对应的处理");
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
+
 
         //颁发令牌
         System.out.println("颁发令牌");
