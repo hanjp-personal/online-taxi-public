@@ -16,17 +16,17 @@ public class TestController {
      * 需要token
      * @return
      */
-    @GetMapping("/authtest")
-    public ResponseResult authtest(){
+    @GetMapping("/authTest")
+    public ResponseResult authTest(){
         return ResponseResult.success("auth test");
     }
 
     /**
-     * 不需要token
+     * 不需要token也能返回
      * @return
      */
-    @GetMapping("/noauthtest")
-    public ResponseResult noauthtest(){
+    @GetMapping("/noauthTest")
+    public ResponseResult noauthTest(){
         return ResponseResult.success("noauth test");
     }
 }
