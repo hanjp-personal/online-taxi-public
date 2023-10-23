@@ -4,10 +4,7 @@ import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.VerificationCodeDTO;
 import com.mashibing.servicepassengeruser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -25,12 +22,12 @@ public class UserController {
 
     /**
      * 获取乘客手机号
-     * @param verificationCodeDTO
+     * @param passengerPhone
      * @return
      */
-    @GetMapping("/user/")
-    public ResponseResult getUser(@RequestBody VerificationCodeDTO verificationCodeDTO){
-        String passengerPhone = verificationCodeDTO.getPassengerPhone();
+    @GetMapping("/user/{phone}")
+    public ResponseResult getUser(@PathVariable("phone") String passengerPhone){
+        System.out.println("service-passenger-user Phone : "+ passengerPhone);
         return userService.getUserByPhone(passengerPhone);
     }
 }
