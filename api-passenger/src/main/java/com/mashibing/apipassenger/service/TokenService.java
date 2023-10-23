@@ -34,9 +34,7 @@ public class TokenService {
         if((StringUtils.isBlank(refreshTokenRedis)) || (!refreshTokenSrc.trim().equals(refreshTokenRedis.trim()))){
             return new ResponseResult().setCode(CommonStatusEnum.TOKEN_ERROR.getCode()).setMessage(CommonStatusEnum.TOKEN_ERROR.getValue());
         }
-
         //生成双Token
-
         String accessTokenKey = RedisPrefixUtils.generatorTokenKey(phone,identity,TokenConstants.ACCESS_TOKEN_TYPE);
         String accessToken = JwtUtils.generatorToken(phone, identity, TokenConstants.ACCESS_TOKEN_TYPE);
         String refreshToken = JwtUtils.generatorToken(phone, identity, TokenConstants.REFRESH_TOKEN_TYPE);
