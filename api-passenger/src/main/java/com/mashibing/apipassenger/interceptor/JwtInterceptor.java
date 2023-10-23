@@ -1,8 +1,5 @@
 package com.mashibing.apipassenger.interceptor;
 
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.mashibing.internalcommon.constant.TokenConstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.dto.TokenResult;
@@ -28,22 +25,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         boolean result = true;
         String resultString = "";
         String token = request.getHeader("Authorization");
-        TokenResult tokenResult = null;
-        try{
-            tokenResult = JwtUtils.parseToken(token);
-        }catch(SignatureVerificationException e){
-            resultString = "token sign error";
-            result = false;
-        }catch(TokenExpiredException e){
-            resultString = "token time out";
-            result = false;
-        }catch(AlgorithmMismatchException e){
-            resultString = "token AlgorithmMismatchException";
-            result = false;
-        }catch (Exception e){
-            resultString = "token is invalid";
-            result = false;
-        }
+        TokenResult tokenResult = JwtUtils.checkToken(token);
         if (tokenResult == null){
             resultString = "token is invalid";
             result = false;
@@ -53,17 +35,11 @@ public class JwtInterceptor implements HandlerInterceptor {
             String tokenKey = RedisPrefixUtils.generatorTokenKey(phone, identity, TokenConstants.ACCESS_TOKEN_TYPE);
             //从redis中获取token
             String tokenRedis = stringRedisTemplate.opsForValue().get(tokenKey);
-            if(StringUtils.isBlank(tokenRedis)){
+            if((StringUtils.isBlank(tokenRedis)) || (!token.trim().equals(tokenRedis.trim()))){
                 resultString = "token is invalid";
                 result = false;
-            }else {
-                if(!token.trim().equals(tokenRedis.trim())){
-                    resultString = "token is invalid";
-                    result = false;
-                }
             }
         }
-
         if (!result){
             PrintWriter printWriter = response.getWriter();
             printWriter.print(JSONObject.fromObject(ResponseResult.fail(resultString)).toString());
