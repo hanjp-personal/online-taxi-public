@@ -14,6 +14,10 @@ public class ForeCastPriceService {
         log.info("出发地纬度： "+ deplatitude);
         log.info("目的地经度： "+ destLongitude);
         log.info("目的地纬度： "+ destlatitude);
+
+        log.info("调用计价服务，计算预估价格");
+
+
         ForeCastPriceResponse foreCastPriceResponse = new ForeCastPriceResponse();
         foreCastPriceResponse.setPrice(9.9);
         return ResponseResult.success(foreCastPriceResponse);
