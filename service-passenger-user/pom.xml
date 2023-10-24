@@ -28,9 +28,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-
-
-
         <!-- add nacos-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
