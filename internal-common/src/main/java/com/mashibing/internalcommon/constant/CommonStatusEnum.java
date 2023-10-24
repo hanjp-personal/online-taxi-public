@@ -7,15 +7,19 @@ public enum CommonStatusEnum {
     /**
      * 验证码错误提示 1000～1099
      */
-    VERIFICATION_CODE_ERROR(1099,"验证码不正确"),
+    VERIFICATION_CODE_ERROR(1000,"验证码不正确"),
     /**
      * token错误提示 1100～1199
      */
-    TOKEN_ERROR(1199,"token错误"),
+    TOKEN_ERROR(1100,"token错误"),
     /**
      * 用户提示信息 1200～1299
      */
-    USER_NO_EXITS(1299,"用户不存在"),
+    USER_NO_EXITS(1200,"用户不存在"),
+    /**
+     * 计价规则：1300～1399
+     */
+    PRICE_RULE_EMPTY(1300,"计价规则不存在"),
     /**
      * 成功
      */
