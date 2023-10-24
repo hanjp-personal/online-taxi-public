@@ -3,7 +3,7 @@ package com.mashibing.internalcommon.Response;
 import lombok.Data;
 
 @Data
-public class DriectionResponse {
+public class DirectionResponse {
 
     private Integer distance;
 
