@@ -2,14 +2,22 @@ package com.mashibing.servicemap.remote;
 
 import com.mashibing.internalcommon.Response.DriectionResponse;
 import com.mashibing.internalcommon.constant.AmapConfigComstants;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class MapDriectionClinet {
 
     @Value("${amap.key}")
     private String amapkey;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public DriectionResponse driection(String depLongitude, String deplatitude, String destLongitude, String destlatitude){
         //组装请求的url
@@ -29,9 +37,9 @@ public class MapDriectionClinet {
         urlBuilder.append("&");
         urlBuilder.append("key=" + amapkey);
         System.out.println(urlBuilder.toString());
-
-
         //调用高德地图API接口
+        ResponseEntity<String> driectionEntity = restTemplate.getForEntity(urlBuilder.toString(), String.class);
+        log.info(driectionEntity.getBody());
 
         //解析接口
         return null;
