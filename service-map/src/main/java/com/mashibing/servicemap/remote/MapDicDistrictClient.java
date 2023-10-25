@@ -27,11 +27,9 @@ public class MapDicDistrictClient {
         url.append("&");
         url.append("key="+amapkey);
 
-        //调用url
+        //调用url接口，请求地图信息
         ResponseEntity<String> forEntity = restTemplate.getForEntity(url.toString(), String.class);
         String dicdistrict = forEntity.getBody();
-        System.out.println(dicdistrict);
-        //存入数据库
 
         return dicdistrict;
     }
