@@ -73,8 +73,8 @@ public class DicDistrictService {
                 }
             }
         }
-        //存入数据库
-        return ResponseResult.success();
+
+        return ResponseResult.success("");
     }
 
     public void insertDicDistrict(String addressCode,String addressName,String parentAddressCode,String level){
@@ -86,6 +86,7 @@ public class DicDistrictService {
         dicDistrict.setLevel(levelInt);
 
         dicDistrict.setParentAddressCode(parentAddressCode);
+        //存入数据库
         dicDistrictMapper.insert(dicDistrict);
     }
 
