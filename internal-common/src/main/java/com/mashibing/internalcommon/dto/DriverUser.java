@@ -3,10 +3,11 @@ package com.mashibing.internalcommon.dto;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 @Data
 public class DriverUser {
-   private Integer id;
+   private Long id;
    private String address;
    private String driverName;
    private String driverPhone;
@@ -32,7 +33,7 @@ public class DriverUser {
    private LocalDate contractOff;
    private Integer state;
 
-   private Date gmtCreate;
-   private Date gmtModified;
+   private LocalDateTime gmtCreate;
+   private LocalDateTime gmtModified;
 
 }
