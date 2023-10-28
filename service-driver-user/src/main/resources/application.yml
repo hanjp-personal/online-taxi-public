@@ -14,3 +14,10 @@ spring:
 
   application:
     name: service-driver-user
+logging:
+  level:
+    com.baomidou.mybatisplus: debug
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
