@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -49,6 +52,7 @@ public class DriverCarBindingRelationshipService {
             return ResponseResult.fail(CommonStatusEnum.CAR_BIND_EXIST.getCode(),CommonStatusEnum.CAR_BIND_EXIST.getValue());
         }
 
+        //添加绑定时间
         LocalDateTime now = LocalDateTime.now();
         driverCarBindingRelationship.setBindingTime(now);
         driverCarBindingRelationship.setBindState(DriverCarConstants.DRIVER_CAR_BIND);
@@ -56,6 +60,24 @@ public class DriverCarBindingRelationshipService {
         return ResponseResult.success("");
     }
     public ResponseResult unbind(DriverCarBindingRelationship driverCarBindingRelationship){
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("driver_id",driverCarBindingRelationship.getDriverId());
+        map.put("car_id",driverCarBindingRelationship.getCarId());
+        map.put("bind_state",DriverCarConstants.DRIVER_CAR_BIND);
+        LocalDateTime now = LocalDateTime.now();
+
+        List<DriverCarBindingRelationship> driverCarBindingRelationships = driverCarBindingRelationshipMapper.selectByMap(map);
+        if(driverCarBindingRelationships.isEmpty()){
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_CAR_BIND_NOT_EXIST.getCode(),CommonStatusEnum.DRIVER_CAR_BIND_NOT_EXIST.getValue());
+        }
+        DriverCarBindingRelationship relationship = driverCarBindingRelationships.get(0);
+        relationship.setBindState(DriverCarConstants.DRIVER_CAR_UNBIND);
+        relationship.setUnBindingTime(now);
+
+        driverCarBindingRelationshipMapper.updateById(relationship);
+
+
         return ResponseResult.success("");
 
     }
