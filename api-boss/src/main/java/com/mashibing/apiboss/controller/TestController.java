@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+
     @GetMapping("/test")
     private String test(){
         return "api-boss";
