@@ -10,6 +10,10 @@ public class AmapConfigComstants {
      * 行政区域查询
      */
     public static final String DICDISTRICT_URL = "https://restapi.amap.com/v3/config/district";
+    /**
+     * 创建服务
+     */
+    public static final String SERVICE_ADD_URL = "https://tsapi.amap.com/v1/track/service/add";
 
     public static final String STATUS = "status";
 
