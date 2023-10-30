@@ -12,4 +12,11 @@ public class DriverCarConstants {
      */
     public  static final int DRIVER_CAR_UNBIND = 2;
 
+    /**
+     * 司机状态 1：有效，0：无效
+     */
+    public static final int DRIVER_VILID = 1;
+
+    public static final int DRIVER_INVILID = 0;
+
 }
