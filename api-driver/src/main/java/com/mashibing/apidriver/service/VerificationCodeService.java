@@ -1,7 +1,9 @@
 package com.mashibing.apidriver.service;
 
 import com.mashibing.apidriver.remote.ServiceUserClient;
+import com.mashibing.apidriver.remote.ServiceVerificationCodeClient;
 import com.mashibing.internalcommon.Response.DriverUserResponse;
+import com.mashibing.internalcommon.Response.NumberCodeResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.DriverCarConstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
@@ -16,6 +18,9 @@ public class VerificationCodeService {
     @Autowired
     private ServiceUserClient serviceUserClient;
 
+    @Autowired
+    private ServiceVerificationCodeClient serviceVerificationCodeClient;
+
     public ResponseResult checkAndsSendVerificationCode(String driverPhone){
         //查询手机号是否存在
         ResponseResult<DriverUserResponse> driverUserResponseResponseResult = serviceUserClient.checkDriverUser(driverPhone);
@@ -27,7 +32,10 @@ public class VerificationCodeService {
         log.info(driverPhone+ " 的司机存在");
 
         //获取验证码
-
+        ResponseResult<NumberCodeResponse> numberCodeResponse = serviceVerificationCodeClient.getNumberCode(6);
+        NumberCodeResponse codeResponseData = numberCodeResponse.getData();
+        int numberCode = codeResponseData.getNumberCode();
+        log.info("获取的验证码："+numberCode);
         //调用第三方验证码
 
         //存入redis
