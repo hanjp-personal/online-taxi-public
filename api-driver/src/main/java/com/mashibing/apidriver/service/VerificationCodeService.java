@@ -6,10 +6,15 @@ import com.mashibing.internalcommon.Response.DriverUserResponse;
 import com.mashibing.internalcommon.Response.NumberCodeResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.DriverCarConstants;
+import com.mashibing.internalcommon.constant.IdentityConstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.util.RedisPrefixUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -20,6 +25,9 @@ public class VerificationCodeService {
 
     @Autowired
     private ServiceVerificationCodeClient serviceVerificationCodeClient;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     public ResponseResult checkAndsSendVerificationCode(String driverPhone){
         //查询手机号是否存在
@@ -38,7 +46,9 @@ public class VerificationCodeService {
         log.info("获取的验证码："+numberCode);
         //调用第三方验证码
 
-        //存入redis
+        //存入redis 1、生成key 2、存入redis
+        String driverkey = RedisPrefixUtils.generatorKeyByPhone(driverPhone, IdentityConstants.DRIVER_IDENTITY);
+        stringRedisTemplate.opsForValue().set(driverkey,numberCode+"",2, TimeUnit.MINUTES);
 
 
         return ResponseResult.success("");

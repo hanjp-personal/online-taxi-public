@@ -4,7 +4,7 @@ public class RedisPrefixUtils {
     /**
      * 验证码前缀
      */
-    public static String verificationCodeprefix = "passenger-verification-code-";
+    public static String verificationCodeprefix = "verification-code-";
     /**
      * token前缀
      */
@@ -15,8 +15,8 @@ public class RedisPrefixUtils {
      * @param passengerPhone
      * @return
      */
-    public static String generatorKeyByPhone(String passengerPhone){
-        return verificationCodeprefix + passengerPhone;
+    public static String generatorKeyByPhone(String passengerPhone ,String identity){
+        return verificationCodeprefix + identity+ "-" +passengerPhone;
     }
 
     /**
