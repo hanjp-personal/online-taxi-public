@@ -11,4 +11,13 @@ public class TestController {
     private String test(){
         return "api-driver";
     };
+    @GetMapping("/auth")
+    public String testAuth(){
+        return "auth";
+    }
+    @GetMapping("/noauth")
+    public String testNoAuth(){
+        return "no auth";
+    }
+
 }
