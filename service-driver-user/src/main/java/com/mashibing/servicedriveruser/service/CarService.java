@@ -1,6 +1,7 @@
 package com.mashibing.servicedriveruser.service;
 
 import com.mashibing.internalcommon.Response.TerminalResponse;
+import com.mashibing.internalcommon.Response.TrackResponse;
 import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.servicedriveruser.mapper.CarMapper;
@@ -28,6 +29,14 @@ public class CarService {
         ResponseResult<TerminalResponse> responseResult = serviceMapClient.addTerminal(car.getVehicleNo());
         String tid = responseResult.getData().getTid();
         car.setTid(tid);
+
+        //获取轨迹trid，并插入到car表中
+        ResponseResult<TrackResponse> trackResponseResponseResult = serviceMapClient.addTrack(tid);
+        String trid = trackResponseResponseResult.getData().getTrid();
+        String trname = trackResponseResponseResult.getData().getTrname();
+        car.setTrid(trid);
+        car.setTrname(trname);
+
         carMapper.insert(car);
         return ResponseResult.success("");
 
