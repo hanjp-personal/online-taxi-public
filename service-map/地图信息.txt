@@ -18,3 +18,12 @@
         "sid": 1008559
     }
 }
+轨迹信息
+{
+    "code": 1,
+    "message": "success",
+    "data": {
+        "trid": "20",
+        "trname": ""
+    }
+}
