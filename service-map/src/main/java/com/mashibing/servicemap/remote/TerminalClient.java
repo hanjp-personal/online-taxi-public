@@ -21,7 +21,7 @@ public class TerminalClient {
     @Autowired
     private RestTemplate restTemplate;//调用第三方接口
 
-    public ResponseResult createTerminal(String name){
+    public ResponseResult<TerminalResponse> createTerminal(String name){
 
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigComstants.Terminal_ADD_URL);

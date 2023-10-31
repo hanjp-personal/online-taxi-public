@@ -170,6 +170,10 @@ public class Car implements Serializable {
      * 状态
      */
     private Integer state;
+    /**
+     * 车辆终端ID
+     */
+    private String tid;
 
     /**
      * 创建时间

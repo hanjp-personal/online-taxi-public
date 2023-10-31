@@ -1,5 +1,6 @@
 package com.mashibing.servicemap.controller;
 
+import com.mashibing.internalcommon.Response.TerminalResponse;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.servicemap.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class TerminalController {
     private TerminalService terminalService;
 
     @PostMapping("/add")
-    public ResponseResult add(String name){
+    public ResponseResult<TerminalResponse> add(String name){
         return terminalService.add(name);
     }
 }
