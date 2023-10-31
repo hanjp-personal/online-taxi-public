@@ -22,6 +22,10 @@ public class AmapConfigComstants {
      * 创建轨迹
      */
     public static final String TRACK_ADD_URL = "https://tsapi.amap.com/v1/track/trace/add";
+    /**
+     * 轨迹上传
+     */
+    public static final String PIONTS_UPLOAD_URL = "https://tsapi.amap.com/v1/track/point/upload";
 
     public static final String STATUS = "status";
 
