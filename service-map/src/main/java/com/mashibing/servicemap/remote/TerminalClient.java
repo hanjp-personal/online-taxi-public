@@ -21,7 +21,7 @@ public class TerminalClient {
     @Autowired
     private RestTemplate restTemplate;//调用第三方接口
 
-    public ResponseResult<TerminalResponse> createTerminal(String name){
+    public ResponseResult<TerminalResponse> createTerminal(String name, String desc){
 
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigComstants.Terminal_ADD_URL);
@@ -31,8 +31,11 @@ public class TerminalClient {
         urlBuilder.append("sid="+amapsid);
         urlBuilder.append("&");
         urlBuilder.append("name=" + name);
-
+        urlBuilder.append("&");
+        urlBuilder.append("desc=" + desc);
+        System.out.println("调用前的高德请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
+        System.out.println("调用后的高得请求:"+ stringResponseEntity.getBody());
         String body = stringResponseEntity.getBody();
         JSONObject jsonObject = JSONObject.fromObject(body);
         String data = jsonObject.getString("data");
