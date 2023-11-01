@@ -1,9 +1,11 @@
 package com.mashibing.apidriver.service;
 
+import com.mashibing.apidriver.remote.ServiceMapClient;
 import com.mashibing.apidriver.remote.ServiceUserClient;
 import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.ApiDriverPointsRequest;
+import com.mashibing.internalcommon.request.PointsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,9 @@ public class PointsService {
 
     @Autowired
     private ServiceUserClient serviceUserClient;
+
+    @Autowired
+    private ServiceMapClient serviceMapClient;
 
     public ResponseResult upload(ApiDriverPointsRequest apiDriverPointsRequest){
 
@@ -24,7 +29,11 @@ public class PointsService {
         String trid = car.getData().getTrid();
 
         //上传到地图
-        return null;
+        PointsRequest pointsRequest = new PointsRequest();
+        pointsRequest.setTid(tid);
+        pointsRequest.setTrid(trid);
+        pointsRequest.setPoints(apiDriverPointsRequest.getPoints());
+        return serviceMapClient.upload(pointsRequest);
 
     }
 }
