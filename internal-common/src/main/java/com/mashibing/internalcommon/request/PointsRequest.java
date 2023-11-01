@@ -4,7 +4,7 @@ import com.mashibing.internalcommon.dto.Points;
 import lombok.Data;
 
 @Data
-public class PointsDTO {
+public class PointsRequest {
     
     private String tid;
     

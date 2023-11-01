@@ -3,7 +3,7 @@ package com.mashibing.servicemap.remote;
 import com.mashibing.internalcommon.constant.AmapConfigComstants;
 import com.mashibing.internalcommon.dto.Points;
 import com.mashibing.internalcommon.dto.ResponseResult;
-import com.mashibing.internalcommon.request.PointsDTO;
+import com.mashibing.internalcommon.request.PointsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class PointsClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public ResponseResult upload(PointsDTO pointsDTO){
+    public ResponseResult upload(PointsRequest pointsRequest){
 
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigComstants.PIONTS_UPLOAD_URL);
@@ -32,12 +32,12 @@ public class PointsClient {
         urlBuilder.append("&");
         urlBuilder.append("sid="+ amapsid);
         urlBuilder.append("&");
-        urlBuilder.append("tid="+pointsDTO.getTid());
+        urlBuilder.append("tid="+pointsRequest.getTid());
         urlBuilder.append("&");
-        urlBuilder.append("trid="+pointsDTO.getTrid());
+        urlBuilder.append("trid="+pointsRequest.getTrid());
         urlBuilder.append("&");
         urlBuilder.append("points=");
-        Points[] points = pointsDTO.getPoints();
+        Points[] points = pointsRequest.getPoints();
         urlBuilder.append("%5B");
         for (Points point : points) {
             urlBuilder.append("%7B");
