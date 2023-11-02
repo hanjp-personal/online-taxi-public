@@ -20,6 +20,10 @@ public enum CommonStatusEnum {
      * 计价规则：1300～1399
      */
     PRICE_RULE_EMPTY(1300,"计价规则不存在"),
+
+    PRICE_RULE_EXIST(1301,"计价规则已存在，不允许添加"),
+
+    PRICE_RULE_NO_EDIT(1302,"计价规则未发生改变"),
     /**
      * 请求地图提示信息： 1400～1499
      */
