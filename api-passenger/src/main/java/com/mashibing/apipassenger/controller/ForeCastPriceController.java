@@ -20,6 +20,8 @@ public class ForeCastPriceController {
         String deplatitude = foreCastPriceDTO.getDeplatitude();
         String destLongitude = foreCastPriceDTO.getDestLongitude();
         String destlatitude = foreCastPriceDTO.getDestlatitude();
-        return foreCastPriceService.forecasrPrice(depLongitude,deplatitude,destLongitude,destlatitude);
+        String cityCode = foreCastPriceDTO.getCityCode();
+        String vehicleType = foreCastPriceDTO.getVehicleType();
+        return foreCastPriceService.forecasrPrice(depLongitude,deplatitude,destLongitude,destlatitude,cityCode,vehicleType);
     }
 }
