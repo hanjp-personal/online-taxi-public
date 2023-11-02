@@ -1,8 +1,8 @@
-package com.mashibing.apipassenger.controller;
+package com.mashibing.serviceorder.controller;
 
-import com.mashibing.apipassenger.service.OrderService;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
+import com.mashibing.serviceorder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +15,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
     @PostMapping("/add")
     public ResponseResult add(@RequestBody OrderRequest orderRequest){
-        orderService.add(orderRequest);
-//        System.out.println(orderRequest);
-        return null;
+        return orderService.add(orderRequest);
     }
-
-
 }
