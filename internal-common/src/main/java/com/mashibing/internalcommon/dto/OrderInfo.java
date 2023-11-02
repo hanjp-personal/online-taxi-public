@@ -97,12 +97,14 @@ public class OrderInfo implements Serializable {
      * 坐标加密标识
      */
     private Integer encrypt;
-
     /**
      * 运价编码类型
      */
     private String fareType;
-
+    /**
+     * 运价版本
+     */
+    private Integer fareVersion;
     /**
      * 接单时车辆的经度
      */

@@ -7,6 +7,17 @@ import java.time.LocalDateTime;
 @Data
 public class OrderRequest {
 
+    /**
+     * 乘客ID
+     */
+    private Long passengerId;
+
+    /**
+     * 乘客手机号
+     */
+    private String passengerPhone;
+
+
     private String address;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime departtime;
@@ -28,5 +39,7 @@ public class OrderRequest {
     private Integer encrypt;
 
     private String faretype;
+
+    private Integer fareVersion;
 
 }

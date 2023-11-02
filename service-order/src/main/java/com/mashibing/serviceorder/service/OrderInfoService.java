@@ -1,5 +1,6 @@
 package com.mashibing.serviceorder.service;
 
+import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @Slf4j
@@ -19,6 +22,11 @@ public class OrderInfoService {
     public ResponseResult add(OrderRequest orderRequest){
         OrderInfo orderInfo = new OrderInfo();
         BeanUtils.copyProperties(orderRequest,orderInfo);
+        orderInfo.setOrderStatus(OrderConstants.ORDER_START);
+
+        LocalDateTime now = LocalDateTime.now();
+        orderInfo.setGmtCreate(now);
+        orderInfo.setGmtModified(now);
         orderInfoMapper.insert(orderInfo);
         return ResponseResult.success("");
     }
