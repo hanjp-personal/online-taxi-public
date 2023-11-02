@@ -40,6 +40,6 @@ public class OrderRequest {
 
     private String faretype;
 
-    private Integer fareVersion;
+    private Integer fareversion;
 
 }

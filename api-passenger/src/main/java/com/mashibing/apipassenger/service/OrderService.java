@@ -16,6 +16,5 @@ public class OrderService {
 
     public ResponseResult add(OrderRequest orderRequest){
        return  serviceOrderClient.add(orderRequest);
-//        log.info("api-passenger: "+ orderRequest.getAddress());
     }
 }

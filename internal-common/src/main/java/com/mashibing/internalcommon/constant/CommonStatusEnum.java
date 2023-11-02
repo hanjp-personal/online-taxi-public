@@ -24,6 +24,8 @@ public enum CommonStatusEnum {
     PRICE_RULE_EXIST(1301,"计价规则已存在，不允许添加"),
 
     PRICE_RULE_NO_EDIT(1302,"计价规则未发生改变"),
+
+    PRICE_RULE_CHANGE(1303,"计价规则有变化"),
     /**
      * 请求地图提示信息： 1400～1499
      */
