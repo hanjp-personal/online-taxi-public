@@ -2,7 +2,7 @@ package com.mashibing.serviceorder.controller;
 
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
-import com.mashibing.serviceorder.service.OrderService;
+import com.mashibing.serviceorder.service.OrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/order")
-public class OrderController {
+public class OrderInfoController {
 
     @Autowired
-    private OrderService orderService;
+    private OrderInfoService orderInfoService;
 
     @PostMapping("/add")
     public ResponseResult add(@RequestBody OrderRequest orderRequest){
-        return orderService.add(orderRequest);
+        return orderInfoService.add(orderRequest);
     }
 }
