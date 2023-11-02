@@ -33,12 +33,15 @@ public class ForeCastPriceService {
         foreCastPriceDTO.setCityCode(cityCode);
         foreCastPriceDTO.setVehicleType(vehicleType);
         ResponseResult<ForeCastPriceResponse> forecast = servicePriceClient.forecast(foreCastPriceDTO);
-        double price = forecast.getData().getPrice();
+        ForeCastPriceResponse data = forecast.getData();
+        double price = data.getPrice();
 
         ForeCastPriceResponse foreCastPriceResponse = new ForeCastPriceResponse();
         foreCastPriceResponse.setPrice(price);
         foreCastPriceResponse.setCityCode(cityCode);
         foreCastPriceResponse.setVehicleType(vehicleType);
+        foreCastPriceResponse.setFareType(data.getFareType());
+        foreCastPriceResponse.setFareVersion(data.getFareVersion());
         return ResponseResult.success(foreCastPriceResponse);
 
 

@@ -68,6 +68,8 @@ public class ForeCastPriceService {
         foreCastPriceResponse.setPrice(price);
         foreCastPriceResponse.setCityCode(cityCode);
         foreCastPriceResponse.setVehicleType(vehicleType);
+        foreCastPriceResponse.setFareType(priceRule.getFareType());
+        foreCastPriceResponse.setFareVersion(priceRule.getFareVersion());
         return ResponseResult.success(foreCastPriceResponse);
     }
     /**
