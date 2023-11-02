@@ -81,4 +81,33 @@ public class PriceRuleService {
         priceRuleMapper.insert(priceRule);
         return ResponseResult.success("");
     }
+
+    public ResponseResult getNewestPriceRule(String fareType){
+        QueryWrapper<PriceRule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("fare_type",fareType);
+        queryWrapper.orderByDesc("fare_version");
+
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.size() > 0){
+            return ResponseResult.success(priceRules.get(0));
+        }else {
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+        }
+
+    }
+
+    public ResponseResult<Boolean> isNewPriceRule(String fareType,Integer fareVersion){
+        ResponseResult<PriceRule> newestPriceRule = getNewestPriceRule(fareType);
+        if (newestPriceRule.getCode() == CommonStatusEnum.PRICE_RULE_EMPTY.getCode()){
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+        }
+
+        PriceRule priceRule = newestPriceRule.getData();
+        Integer fareVersionDB = priceRule.getFareVersion();
+        if(fareVersionDB > fareVersion){
+            return ResponseResult.success(false);
+        }else {
+            return ResponseResult.success(true);
+        }
+    }
 }

@@ -4,9 +4,7 @@ import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.ForeCastPriceDTO;
 import com.mashibing.serviceprice.service.ForeCastPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ForeCastPriceController {
@@ -24,4 +22,5 @@ public class ForeCastPriceController {
         String vehicleType = foreCastPriceDTO.getVehicleType();
         return foreCastPriceService.forecasrPrice(depLongitude,deplatitude,destLongitude,destlatitude,cityCode,vehicleType);
     }
+
 }
