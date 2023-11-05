@@ -20,26 +20,30 @@ public class OrderRequest {
 
     private String address;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime departtime;
+    private LocalDateTime departTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime ordertime;
+    private LocalDateTime orderTime;
 
     private String departure;
 
-    private String deplongitude;
+    private String depLongitude;
 
-    private String deplatitude;
+    private String depLatitude;
 
     private String destination;
 
-    private String deslongitude;
+    private String desLongitude;
 
-    private String deslatitude;
+    private String desLatitude;
 
     private Integer encrypt;
 
-    private String faretype;
+    private String fareType;
 
-    private Integer fareversion;
+    private Integer fareVersion;
+    /**
+     * 设备号
+     */
+    private String deviceCode;
 
 }

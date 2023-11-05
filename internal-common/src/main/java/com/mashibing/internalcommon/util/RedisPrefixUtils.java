@@ -9,6 +9,10 @@ public class RedisPrefixUtils {
      * token前缀
      */
     public static String tokenPrefix = "token-";
+    /**
+     * 黑名单前缀
+     */
+    public static String BlackDeviceCodePrefix = "black-device-";
 
     /**
      * 生成key

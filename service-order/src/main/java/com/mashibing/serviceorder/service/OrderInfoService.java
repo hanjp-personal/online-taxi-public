@@ -6,14 +6,17 @@ import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
+import com.mashibing.internalcommon.util.RedisPrefixUtils;
 import com.mashibing.serviceorder.mapper.OrderInfoMapper;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -25,12 +28,21 @@ public class OrderInfoService {
     @Autowired
     private ServicePriceClient servicePriceClient;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     public ResponseResult add(OrderRequest orderRequest){
         //判断计价规则是否是最新版本
-        ResponseResult<Boolean> result = servicePriceClient.isNew(orderRequest.getFaretype(), orderRequest.getFareversion());
+        ResponseResult<Boolean> result = servicePriceClient.isNewPriceRule(orderRequest.getFareType(), orderRequest.getFareVersion());
         if (!(result.getData())){
             return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGE.getCode(),CommonStatusEnum.PRICE_RULE_CHANGE.getValue());
         }
+        //判断设备是否为黑名单设备
+        String deviceCodeKey = RedisPrefixUtils.BlackDeviceCodePrefix + orderRequest.getDeviceCode();
+        if (isBalckDevice(deviceCodeKey)) {
+            return ResponseResult.fail(CommonStatusEnum.BLACKDEVICE.getCode(), CommonStatusEnum.BLACKDEVICE.getValue());
+        }
+
 
         //判断是否有正在进行的订单，有则不允许再次下单
         if (isOrderGoningOn(orderRequest.getPassengerId()) > 0){
@@ -45,8 +57,24 @@ public class OrderInfoService {
         LocalDateTime now = LocalDateTime.now();
         orderInfo.setGmtCreate(now);
         orderInfo.setGmtModified(now);
-        orderInfoMapper.insert(orderInfo);
+//        orderInfoMapper.insert(orderInfo);
         return ResponseResult.success(orderInfo);
+    }
+
+    private boolean isBalckDevice(String deviceCodeKey) {
+        Boolean aBoolean = stringRedisTemplate.hasKey(deviceCodeKey);
+        if (aBoolean){
+            String deviceStr = stringRedisTemplate.opsForValue().get(deviceCodeKey);
+            int count = Integer.parseInt(deviceStr);
+            if (count >= 2){
+                return true;
+            }else {
+                stringRedisTemplate.opsForValue().increment(deviceCodeKey);
+            }
+        }else {
+            stringRedisTemplate.opsForValue().setIfAbsent(deviceCodeKey,"1",1, TimeUnit.HOURS);
+        }
+        return false;
     }
 
     public int isOrderGoningOn(Long passengerId){

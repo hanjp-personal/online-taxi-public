@@ -43,9 +43,13 @@ public enum CommonStatusEnum {
 
     CAR_BIND_EXIST(1504,"车辆已经被绑定了，请勿重复绑定"),
     /**
-     * 订单提示信息
+     * 订单提示信息 1600～1699
      */
     OREDER_ISGONG_ON(1600, "有正在进行的订单"),
+    /**
+     * 黑名单设备提示信息
+     */
+    BLACKDEVICE(1601,"该设备超出下单次数"),
     /**
      * 成功
      */
