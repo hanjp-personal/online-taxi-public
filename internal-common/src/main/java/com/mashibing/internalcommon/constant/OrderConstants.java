@@ -2,6 +2,8 @@ package com.mashibing.internalcommon.constant;
 
 public class OrderConstants {
 
+    public static final int ORDER_CANCEL = 0;
+
     public static final int ORDER_START = 1;
 
     public static final int DRIVER_RECEIVE_ORDER = 2;

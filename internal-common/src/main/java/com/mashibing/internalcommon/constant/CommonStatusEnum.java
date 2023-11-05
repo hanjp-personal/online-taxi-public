@@ -43,6 +43,10 @@ public enum CommonStatusEnum {
 
     CAR_BIND_EXIST(1504,"车辆已经被绑定了，请勿重复绑定"),
     /**
+     * 订单提示信息
+     */
+    OREDER_ISGONG_ON(1600, "有正在进行的订单"),
+    /**
      * 成功
      */
     SUCCESS(1,"success"),

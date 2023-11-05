@@ -1,5 +1,6 @@
 package com.mashibing.serviceorder.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.OrderInfo;
@@ -31,6 +32,12 @@ public class OrderInfoService {
             return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGE.getCode(),CommonStatusEnum.PRICE_RULE_CHANGE.getValue());
         }
 
+        //判断是否有正在进行的订单，有则不允许再次下单
+        if (isOrderGoningOn(orderRequest.getPassengerId()) > 0){
+            return ResponseResult.fail(CommonStatusEnum.OREDER_ISGONG_ON.getCode(),CommonStatusEnum.OREDER_ISGONG_ON.getValue());
+        }
+
+
         OrderInfo orderInfo = new OrderInfo();
         BeanUtils.copyProperties(orderRequest,orderInfo);
         orderInfo.setOrderStatus(OrderConstants.ORDER_START);
@@ -41,4 +48,19 @@ public class OrderInfoService {
         orderInfoMapper.insert(orderInfo);
         return ResponseResult.success(orderInfo);
     }
-}
+
+    public int isOrderGoningOn(Long passengerId){
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("passenger_id",passengerId);
+        queryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstants.ORDER_START)
+                .or().eq("order_status",OrderConstants.DRIVER_RECEIVE_ORDER)
+                .or().eq("order_status",OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                .or().eq("order_status",OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                .or().eq("order_status",OrderConstants.PICK_UP_PASSENGER)
+                .or().eq("order_status",OrderConstants.PASSENGER_GETOFF)
+                .or().eq("order_status",OrderConstants.TO_START_PAY));
+
+        Integer result = orderInfoMapper.selectCount(queryWrapper);
+        return result;
+    }
+ }
