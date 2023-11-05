@@ -99,7 +99,8 @@ public class PriceRuleService {
     public ResponseResult<Boolean> isNewPriceRule(String fareType,Integer fareVersion){
         ResponseResult<PriceRule> newestPriceRule = getNewestPriceRule(fareType);
         if (newestPriceRule.getCode() == CommonStatusEnum.PRICE_RULE_EMPTY.getCode()){
-            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+//            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+            return ResponseResult.success(false);
         }
 
         PriceRule priceRule = newestPriceRule.getData();

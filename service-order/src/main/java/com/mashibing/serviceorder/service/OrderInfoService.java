@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.OrderInfo;
+import com.mashibing.internalcommon.dto.PriceRule;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.internalcommon.util.RedisPrefixUtils;
@@ -33,14 +34,18 @@ public class OrderInfoService {
 
     public ResponseResult add(OrderRequest orderRequest){
         //判断计价规则是否是最新版本
-        ResponseResult<Boolean> result = servicePriceClient.isNewPriceRule(orderRequest.getFareType(), orderRequest.getFareVersion());
-        if (!(result.getData())){
-            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGE.getCode(),CommonStatusEnum.PRICE_RULE_CHANGE.getValue());
-        }
+//        ResponseResult<Boolean> result = servicePriceClient.isNewPriceRule(orderRequest.getFareType(), orderRequest.getFareVersion());
+//        if (!(result.getData())){
+//            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGE.getCode(),CommonStatusEnum.PRICE_RULE_CHANGE.getValue());
+//        }
         //判断设备是否为黑名单设备
-        String deviceCodeKey = RedisPrefixUtils.BlackDeviceCodePrefix + orderRequest.getDeviceCode();
-        if (isBalckDevice(deviceCodeKey)) {
+        if (isBalckDevice(orderRequest)) {
             return ResponseResult.fail(CommonStatusEnum.BLACKDEVICE.getCode(), CommonStatusEnum.BLACKDEVICE.getValue());
+        }
+
+        //
+        if (!priceRuleIsExist(orderRequest)){
+            return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_SERVICE.getCode(),CommonStatusEnum.CITY_SERVICE_NOT_SERVICE.getValue());
         }
 
 
@@ -61,7 +66,8 @@ public class OrderInfoService {
         return ResponseResult.success(orderInfo);
     }
 
-    private boolean isBalckDevice(String deviceCodeKey) {
+    private boolean isBalckDevice(OrderRequest orderRequest) {
+        String deviceCodeKey = RedisPrefixUtils.BlackDeviceCodePrefix + orderRequest.getDeviceCode();
         Boolean aBoolean = stringRedisTemplate.hasKey(deviceCodeKey);
         if (aBoolean){
             String deviceStr = stringRedisTemplate.opsForValue().get(deviceCodeKey);
@@ -90,5 +96,20 @@ public class OrderInfoService {
 
         Integer result = orderInfoMapper.selectCount(queryWrapper);
         return result;
+    }
+
+    public Boolean priceRuleIsExist(OrderRequest orderRequest){
+        String fareType = orderRequest.getFareType();
+        int index = fareType.indexOf("$");
+        String cityCode = fareType.substring(0, index);
+        String vehicleType = fareType.substring(index + 1);
+
+        PriceRule priceRule = new PriceRule();
+        priceRule.setCityCode(cityCode);
+        priceRule.setVehicleType(vehicleType);
+
+        ResponseResult<Boolean> booleanResponseResult = servicePriceClient.priceRuleIsExist(priceRule);
+        return booleanResponseResult.getData();
+
     }
  }
