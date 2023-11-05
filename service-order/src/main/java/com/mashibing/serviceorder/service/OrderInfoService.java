@@ -57,7 +57,7 @@ public class OrderInfoService {
         LocalDateTime now = LocalDateTime.now();
         orderInfo.setGmtCreate(now);
         orderInfo.setGmtModified(now);
-//        orderInfoMapper.insert(orderInfo);
+        orderInfoMapper.insert(orderInfo);
         return ResponseResult.success(orderInfo);
     }
 
