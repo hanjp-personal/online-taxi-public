@@ -15,6 +15,7 @@ import com.mashibing.serviceorder.remote.ServiceMapClient;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -151,6 +152,14 @@ public class OrderInfoService {
             listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
 
             log.info("在半径"+radius+"的范围里寻找车辆,:"+ JSONArray.fromObject(listResponseResult.getData()));
+
+            //解析数据，获取车辆ID
+            JSONArray result = JSONArray.fromObject(listResponseResult.getData());
+            for (int j = 0; j < result.size(); j++) {
+                JSONObject jsonObject = result.getJSONObject(j);
+                String carIdString = jsonObject.getString("carId");
+                long carId = Long.parseLong(carIdString);
+            }
 
         }
     }
