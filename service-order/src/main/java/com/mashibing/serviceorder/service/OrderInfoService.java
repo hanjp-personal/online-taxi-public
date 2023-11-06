@@ -9,6 +9,7 @@ import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.internalcommon.util.RedisPrefixUtils;
 import com.mashibing.serviceorder.mapper.OrderInfoMapper;
+import com.mashibing.serviceorder.remote.ServiceCityDriverClient;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,14 +31,24 @@ public class OrderInfoService {
     private ServicePriceClient servicePriceClient;
 
     @Autowired
+    private ServiceCityDriverClient serviceCityDriverClient;
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     public ResponseResult add(OrderRequest orderRequest){
+
+        //根据城市代码查询当前城市是否有司机
+        ResponseResult<Boolean> avialable = serviceCityDriverClient.isAvialable(orderRequest.getAddress());
+        log.info("测试当前城市是否有司机："+avialable.getData());
+        if(!avialable.getData()){
+            return ResponseResult.fail(CommonStatusEnum.CITY_DRIVER_EMPTY.getCode(),CommonStatusEnum.CITY_DRIVER_EMPTY.getValue());
+        }
+
         //判断计价规则是否是最新版本
-//        ResponseResult<Boolean> result = servicePriceClient.isNewPriceRule(orderRequest.getFareType(), orderRequest.getFareVersion());
-//        if (!(result.getData())){
-//            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGE.getCode(),CommonStatusEnum.PRICE_RULE_CHANGE.getValue());
-//        }
+        ResponseResult<Boolean> result = servicePriceClient.isNewPriceRule(orderRequest.getFareType(), orderRequest.getFareVersion());
+        if (!(result.getData())){
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGE.getCode(),CommonStatusEnum.PRICE_RULE_CHANGE.getValue());
+        }
         //判断设备是否为黑名单设备
         if (isBalckDevice(orderRequest)) {
             return ResponseResult.fail(CommonStatusEnum.BLACKDEVICE.getCode(), CommonStatusEnum.BLACKDEVICE.getValue());
