@@ -1,6 +1,7 @@
 package com.mashibing.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mashibing.internalcommon.Response.TerminalResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.OrderInfo;
@@ -10,6 +11,7 @@ import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.internalcommon.util.RedisPrefixUtils;
 import com.mashibing.serviceorder.mapper.OrderInfoMapper;
 import com.mashibing.serviceorder.remote.ServiceCityDriverClient;
+import com.mashibing.serviceorder.remote.ServiceMapClient;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -34,6 +38,9 @@ public class OrderInfoService {
     private ServiceCityDriverClient serviceCityDriverClient;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private ServiceMapClient serviceMapClient;
 
     public ResponseResult add(OrderRequest orderRequest){
 
@@ -74,6 +81,9 @@ public class OrderInfoService {
         orderInfo.setGmtCreate(now);
         orderInfo.setGmtModified(now);
         orderInfoMapper.insert(orderInfo);
+
+        //创建成功后进行实时派单
+        dispatchOrder(orderInfo);
         return ResponseResult.success(orderInfo);
     }
 
@@ -122,5 +132,25 @@ public class OrderInfoService {
         ResponseResult<Boolean> booleanResponseResult = servicePriceClient.priceRuleIsExist(priceRule);
         return booleanResponseResult.getData();
 
+    }
+
+    public void dispatchOrder(OrderInfo orderInfo){
+        String depLongitude = orderInfo.getDepLongitude();
+        String depLatitude = orderInfo.getDepLatitude();
+        String center = depLatitude +","+ depLongitude;
+
+        List<Integer> radiuslist = new ArrayList<>();
+        radiuslist.add(2000);
+        radiuslist.add(4000);
+        radiuslist.add(5000);
+
+        ResponseResult<List<TerminalResponse>> listResponseResult = null;
+        for (int i = 0; i < radiuslist.size(); i++) {
+            Integer radius = radiuslist.get(i);
+            listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
+
+            log.info("在半径"+radius+"的范围里寻找车辆");
+
+        }
     }
  }
