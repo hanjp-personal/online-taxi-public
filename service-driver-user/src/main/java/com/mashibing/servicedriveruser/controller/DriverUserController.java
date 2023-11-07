@@ -1,6 +1,7 @@
 package com.mashibing.servicedriveruser.controller;
 
 import com.mashibing.internalcommon.Response.DriverUserResponse;
+import com.mashibing.internalcommon.Response.OrderResponse;
 import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.servicedriveruser.service.DriverUserService;
@@ -57,7 +58,7 @@ public class DriverUserController {
         return ResponseResult.success(driverUserResponse);
     }
     @GetMapping("/get-available-driver/{carId}")
-    public ResponseResult getAvailableDriver(@PathVariable("carId") Long carId){
+    public ResponseResult<OrderResponse> getAvailableDriver(@PathVariable("carId") Long carId){
         return driverUserService.getAvailableDriver(carId);
 
     }

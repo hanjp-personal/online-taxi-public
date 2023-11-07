@@ -1,6 +1,7 @@
 package com.mashibing.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mashibing.internalcommon.Response.OrderResponse;
 import com.mashibing.internalcommon.Response.TerminalResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.OrderConstants;
@@ -151,6 +152,7 @@ public class OrderInfoService {
         radiuslist.add(5000);
 
         ResponseResult<List<TerminalResponse>> listResponseResult = null;
+        radius:
         for (int i = 0; i < radiuslist.size(); i++) {
             Integer radius = radiuslist.get(i);
             listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
@@ -163,6 +165,16 @@ public class OrderInfoService {
                 JSONObject jsonObject = result.getJSONObject(j);
                 String carIdString = jsonObject.getString("carId");
                 long carId = Long.parseLong(carIdString);
+
+                //根据车辆ID，查询是否有可派用的司机
+                ResponseResult<OrderResponse> availableDriver = serviceCityDriverClient.getAvailableDriver(carId);
+                if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()){
+                    log.info("没有车辆ID：" +carId+"对应的司机");
+                    continue radius;
+                }else {
+                    log.info("找到了当前出车的司机，车辆ID为："+ carId);
+                    break radius;
+                }
             }
 
         }
