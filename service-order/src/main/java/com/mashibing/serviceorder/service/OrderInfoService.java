@@ -75,7 +75,7 @@ public class OrderInfoService {
 
 
         //判断是否有正在进行的订单，有则不允许再次下单
-        if (isOrderGoningOn(orderRequest.getPassengerId()) > 0){
+        if (isPassengerOrderGoningOn(orderRequest.getPassengerId()) > 0){
             return ResponseResult.fail(CommonStatusEnum.OREDER_ISGONG_ON.getCode(),CommonStatusEnum.OREDER_ISGONG_ON.getValue());
         }
 
@@ -111,7 +111,12 @@ public class OrderInfoService {
         return false;
     }
 
-    public int isOrderGoningOn(Long passengerId){
+    /**
+     * 业务判断，乘客正在进行的订单
+     * @param passengerId
+     * @return
+     */
+    public int isPassengerOrderGoningOn(Long passengerId){
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper();
         queryWrapper.eq("passenger_id",passengerId);
         queryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstants.ORDER_START)
@@ -123,6 +128,23 @@ public class OrderInfoService {
                 .or().eq("order_status",OrderConstants.TO_START_PAY));
 
         Integer result = orderInfoMapper.selectCount(queryWrapper);
+        return result;
+    }
+
+    /**
+     * 业务判断，司机正在进行的订单
+     * @param driverId
+     * @return
+     */
+    public int isDriverOrderGoningOn(Long driverId){
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("driver_id",driverId);
+        queryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstants.DRIVER_RECEIVE_ORDER)
+                .or().eq("order_status",OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                .or().eq("order_status",OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                .or().eq("order_status",OrderConstants.PICK_UP_PASSENGER));
+        Integer result = orderInfoMapper.selectCount(queryWrapper);
+        log.info("司机ID："+ driverId +"正在进行的订单数量：" + result);
         return result;
     }
 
@@ -170,9 +192,15 @@ public class OrderInfoService {
                 ResponseResult<OrderResponse> availableDriver = serviceCityDriverClient.getAvailableDriver(carId);
                 if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()){
                     log.info("没有车辆ID：" +carId+"对应的司机");
-                    continue radius;
+                    continue;
                 }else {
                     log.info("找到了当前出车的司机，车辆ID为："+ carId);
+                    OrderResponse orderResponse = availableDriver.getData();
+                    Long driverId = orderResponse.getDriverId();
+                    //判断司机是否有正在进行的订单
+                    if (isDriverOrderGoningOn(driverId) > 0){
+                        continue ;
+                    }
                     break radius;
                 }
             }
