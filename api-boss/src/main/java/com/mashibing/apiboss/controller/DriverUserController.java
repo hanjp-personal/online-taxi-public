@@ -29,7 +29,7 @@ public class DriverUserController  {
         return driverUserService.updateDriverUser(driverUser);
     }
     @PostMapping("/car")
-    public ResponseResult addcCar(@RequestBody Car car){
+    public ResponseResult addCar(@RequestBody Car car){
         return carService.addCar(car);
     }
 }

@@ -3,6 +3,7 @@ package com.mashibing.servicemap.remote;
 import com.mashibing.internalcommon.Response.TrackResponse;
 import com.mashibing.internalcommon.constant.AmapConfigComstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class TrackClient {
     @Value("${amap.key}")
     private String amapkey;
@@ -31,7 +33,9 @@ public class TrackClient {
         urlBuilder.append("sid="+ amapsid);
         urlBuilder.append("&");
         urlBuilder.append("tid="+tid);
+        log.info("处理高德地图请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
+        log.info("处理高德地图响应："+stringResponseEntity.getBody());
         String body = stringResponseEntity.getBody();
         JSONObject jsonObject = JSONObject.fromObject(body);
         JSONObject data = jsonObject.getJSONObject("data");

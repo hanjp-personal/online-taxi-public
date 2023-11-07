@@ -36,9 +36,10 @@ public class MapDirectionClinet {
         urlBuilder.append("&");
         urlBuilder.append("key=" + amapkey);
         //调用高德地图API接口
+        log.info("处理高德地图请求："+ urlBuilder.toString());
         ResponseEntity<String> directionEntity = restTemplate.getForEntity(urlBuilder.toString(), String.class);
         String directionEntityBody = directionEntity.getBody();
-        log.info("高德地图：路径规划，返回信息"+directionEntity.getBody());
+        log.info("处理高德地图响应："+directionEntity.getBody());
 
         //解析接口
         DirectionResponse directionResponse = parseDirectionEntity(directionEntityBody);

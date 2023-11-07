@@ -17,9 +17,8 @@ public class OrderController {
     private OrderService orderService;
     @PostMapping("/add")
     public ResponseResult add(@RequestBody OrderRequest orderRequest){
-        orderService.add(orderRequest);
+         return orderService.add(orderRequest);
 //        System.out.println(orderRequest);
-        return null;
     }
 
 

@@ -3,6 +3,7 @@ package com.mashibing.serviceprice.controller;
 
 import com.mashibing.internalcommon.dto.PriceRule;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.request.PriceRuleIsNewRequest;
 import com.mashibing.serviceprice.service.PriceRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,9 @@ public class PriceRuleController {
     public ResponseResult getNewestPriceRule(@RequestParam String fareType){
         return priceRuleService.getNewestPriceRule(fareType);
     }
-    @GetMapping("/isNew-rule")
-    public ResponseResult<Boolean> isNewPriceRule(@RequestParam String fareType,@RequestParam Integer fareVersion){
-         return priceRuleService.isNewPriceRule(fareType,fareVersion);
+    @PostMapping("/isNew-rule")
+    public ResponseResult<Boolean> isNewPriceRule(@RequestBody PriceRuleIsNewRequest priceRuleIsNewRequest){
+         return priceRuleService.isNewPriceRule(priceRuleIsNewRequest.getFareType(),priceRuleIsNewRequest.getFareVersion());
     }
     @GetMapping("/if-exist")
     public ResponseResult<Boolean> priceRuleExist(@RequestBody PriceRule priceRule){

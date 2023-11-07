@@ -3,6 +3,7 @@ package com.mashibing.servicemap.remote;
 import com.mashibing.internalcommon.Response.TerminalResponse;
 import com.mashibing.internalcommon.constant.AmapConfigComstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TerminalClient {
 
     @Value("${amap.key}")
@@ -61,9 +63,9 @@ public class TerminalClient {
         urlBuilder.append("center=" + center);
         urlBuilder.append("&");
         urlBuilder.append("radius=" + radius);
-        System.out.println("调用前的高德请求："+ urlBuilder.toString());
+        log.info("调用前的高德请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
-        System.out.println("调用后的高得请求:"+ stringResponseEntity.getBody());
+        log.info("调用后的高德响应:"+ stringResponseEntity.getBody());
 
         List<TerminalResponse> terminalResponseList = new ArrayList<>();
 

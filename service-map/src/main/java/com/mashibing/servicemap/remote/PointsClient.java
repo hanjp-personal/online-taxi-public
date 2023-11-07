@@ -4,6 +4,7 @@ import com.mashibing.internalcommon.constant.AmapConfigComstants;
 import com.mashibing.internalcommon.dto.Points;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.PointsRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 
 @Service
+@Slf4j
 public class PointsClient {
     @Value("${amap.key}")
     private String amapkey;
@@ -55,9 +57,9 @@ public class PointsClient {
         }
         urlBuilder.append("%5D");
 
-        System.out.println("高得地图请求："+urlBuilder.toString());
+        log.info("处理高德地图请求："+urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(URI.create(urlBuilder.toString()), null, String.class);
-        System.out.println("高得地图响应："+stringResponseEntity.getBody());
+        log.info("处理高德地图响应："+stringResponseEntity.getBody());
         return ResponseResult.success("");
     }
 
