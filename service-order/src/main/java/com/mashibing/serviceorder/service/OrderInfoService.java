@@ -162,7 +162,7 @@ public class OrderInfoService {
 
     }
 
-    public void dispatchOrder(OrderInfo orderInfo){
+    public  synchronized void dispatchOrder(OrderInfo orderInfo){
         String depLongitude = orderInfo.getDepLongitude();
         String depLatitude = orderInfo.getDepLatitude();
         String center = depLatitude +","+ depLongitude;
