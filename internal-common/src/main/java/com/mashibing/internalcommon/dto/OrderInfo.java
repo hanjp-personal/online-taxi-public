@@ -128,7 +128,7 @@ public class OrderInfo implements Serializable {
     /**
      * 车牌号
      */
-    private String vehicleId;
+    private String vehicleNo;
 
     /**
      * 司机去接乘客的出发时间

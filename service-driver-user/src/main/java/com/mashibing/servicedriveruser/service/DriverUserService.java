@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.Response.OrderResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.DriverCarConstants;
-import com.mashibing.internalcommon.dto.DriverCarBindingRelationship;
-import com.mashibing.internalcommon.dto.DriverUser;
-import com.mashibing.internalcommon.dto.DriverUserWorkStatus;
-import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.dto.*;
+import com.mashibing.servicedriveruser.mapper.CarMapper;
 import com.mashibing.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
 import com.mashibing.servicedriveruser.mapper.DriverUserMapper;
 import com.mashibing.servicedriveruser.mapper.DriverUserWorkStatusMapper;
@@ -24,6 +22,9 @@ public class DriverUserService {
 
     @Autowired
     private DriverUserMapper driverUserMapper;
+
+    @Autowired
+    private CarMapper carMapper;
 
     @Autowired
     private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
@@ -86,31 +87,40 @@ public class DriverUserService {
     }
 
     public ResponseResult<OrderResponse> getAvailableDriver(Long carId){
-        QueryWrapper<DriverCarBindingRelationship> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("car_id",carId);
-        queryWrapper.eq("bind_state",DriverCarConstants.DRIVER_CAR_BIND);
-        DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(queryWrapper);
+        //根据司机和车辆绑定关系查询
+        QueryWrapper<DriverCarBindingRelationship> driverCarBindingRelationshipqueryWrapper = new QueryWrapper<>();
+        driverCarBindingRelationshipqueryWrapper.eq("car_id",carId);
+        driverCarBindingRelationshipqueryWrapper.eq("bind_state",DriverCarConstants.DRIVER_CAR_BIND);
+        DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(driverCarBindingRelationshipqueryWrapper);
         if(null == driverCarBindingRelationship){
             return ResponseResult.fail(CommonStatusEnum.DRIVER_CAR_BIND_NOT_EXIST.getCode(),CommonStatusEnum.DRIVER_CAR_BIND_NOT_EXIST.getValue());
         }else {
             Long driverId = driverCarBindingRelationship.getDriverId();
-
-            QueryWrapper<DriverUserWorkStatus> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("driver_id",driverId);
-            queryWrapper1.eq("work_status",DriverCarConstants.DRIVER_WORK_STATUS_START);
-            DriverUserWorkStatus driverUserWorkStatus = driverUserWorkStatusMapper.selectOne(queryWrapper1);
+            //根据司机工作状态查询
+            QueryWrapper<DriverUserWorkStatus> driverUserWorkStatusqueryWrapper = new QueryWrapper<>();
+            driverUserWorkStatusqueryWrapper.eq("driver_id",driverId);
+            driverUserWorkStatusqueryWrapper.eq("work_status",DriverCarConstants.DRIVER_WORK_STATUS_START);
+            DriverUserWorkStatus driverUserWorkStatus = driverUserWorkStatusMapper.selectOne(driverUserWorkStatusqueryWrapper);
 
             if (null == driverUserWorkStatus){
                 return ResponseResult.fail(CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode(),CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getValue());
             }else {
-                QueryWrapper<DriverUser> queryWrapper2 = new QueryWrapper<>();
-                queryWrapper2.eq("id",driverUserWorkStatus.getDriverId());
-                DriverUser driverUser = driverUserMapper.selectOne(queryWrapper2);
+                //根据司机ID查询司机信息
+                QueryWrapper<DriverUser> driverUserqueryWrapper = new QueryWrapper<>();
+                driverUserqueryWrapper.eq("id",driverUserWorkStatus.getDriverId());
+                DriverUser driverUser = driverUserMapper.selectOne(driverUserqueryWrapper);
+
+                //根据车辆ID查询车辆信息
+                QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+                carQueryWrapper.eq("id",carId);
+                Car car = carMapper.selectOne(carQueryWrapper);
 
                 OrderResponse orderResponse = new OrderResponse();
                 orderResponse.setDriverId(driverId);
                 orderResponse.setCarId(carId);
                 orderResponse.setDriverPhone(driverUser.getDriverPhone());
+                orderResponse.setLicenseId(driverUser.getLicenseId());
+                orderResponse.setVehicleNo(car.getVehicleNo());
                 return ResponseResult.success(orderResponse);
             }
         }

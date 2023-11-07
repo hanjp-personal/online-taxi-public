@@ -17,7 +17,6 @@ import com.mashibing.serviceorder.remote.ServiceMapClient;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -182,12 +181,13 @@ public class OrderInfoService {
             log.info("在半径"+radius+"的范围里寻找车辆,:"+ JSONArray.fromObject(listResponseResult.getData()));
 
             //解析数据，获取车辆ID
-            JSONArray result = JSONArray.fromObject(listResponseResult.getData());
-            for (int j = 0; j < result.size(); j++) {
-                JSONObject jsonObject = result.getJSONObject(j);
-                String carIdString = jsonObject.getString("carId");
-                long carId = Long.parseLong(carIdString);
+            List<TerminalResponse> data = listResponseResult.getData();
+            for (int j = 0; j < data.size(); j++) {
 
+                TerminalResponse terminalResponse = data.get(j);
+                long carId = terminalResponse.getCarId();
+                String longitude = terminalResponse.getLongitude();
+                String latitude = terminalResponse.getLatitude();
                 //根据车辆ID，查询是否有可派用的司机
                 ResponseResult<OrderResponse> availableDriver = serviceCityDriverClient.getAvailableDriver(carId);
                 if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()){
@@ -197,10 +197,28 @@ public class OrderInfoService {
                     log.info("找到了当前出车的司机，车辆ID为："+ carId);
                     OrderResponse orderResponse = availableDriver.getData();
                     Long driverId = orderResponse.getDriverId();
+                    String driverPhone = orderResponse.getDriverPhone();
+                    String licenseId = orderResponse.getLicenseId();
+                    String vehicleNo = orderResponse.getVehicleNo();
                     //判断司机是否有正在进行的订单
                     if (isDriverOrderGoningOn(driverId) > 0){
                         continue ;
                     }
+                    //订单直接匹配司机
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(driverPhone);
+                    orderInfo.setCarId(carId);
+                    //从地图中获取
+                    orderInfo.setReceiveOrderCarLongitude(longitude);
+                    orderInfo.setReceiveOrderCarLatitude(latitude);
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
+                    //从司机信息中获取
+                    orderInfo.setLicenseId(licenseId);
+                    //从车辆信息中获取
+                    orderInfo.setVehicleNo(vehicleNo);
+                    orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+                    //更新订单信息
+                    orderInfoMapper.updateById(orderInfo);
                     break radius;
                 }
             }
