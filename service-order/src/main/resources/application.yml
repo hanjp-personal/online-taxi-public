@@ -12,6 +12,10 @@ spring:
         server-addr: 127.0.0.1:8858
   application:
     name: service-order
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
 
 ---
 spring:
