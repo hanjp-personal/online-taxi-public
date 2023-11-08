@@ -2,9 +2,42 @@
 <head>
     <meta charset="UTF-8">
 </head>
+<script>
+    driverId = 1;
+    source = null;
+    if(window.EventSource){
+        console.log("此浏览器支持SSE");
 
+        //连接的建立
+        source = new EventSource("http://localhost:9000/connect/"+driverId);
+
+        source.addEventListener("message",function (e){
+           content = e.data;
+           console.log("消息内容："+content);
+           setMessage(content);
+        });
+    }else{
+        setMessage("此浏览器不支持")
+    }
+
+    function setMessage(content){
+        document.getElementById("message").innerHTML+=(content + '<br>')
+    }
+    function sourceClose(){
+        console.log("close方法被调用");
+        source.close();
+        httpRequest = new XMLHttpRequest();
+        httpRequest.open("get","http://localhost:9000/close/"+driverId);
+        httpRequest.send();
+    }
+
+</script>
 <body>
 <h1>司机监听测试页面-模拟司机客户端</h1>
+<button onclick="setMessage('鼠标点我了')">测试message消息</button>
+<div id="message">
+    此处展示服务推送过来的消息<br>
+</div>
+<button onclick="sourceClose()">关闭连接</button>
 </body>
-
 </html>
