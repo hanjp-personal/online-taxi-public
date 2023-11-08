@@ -1,4 +1,4 @@
-package com.mashibing.ssedriverclientweb;
+package com.mashibing.servicessepush;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
