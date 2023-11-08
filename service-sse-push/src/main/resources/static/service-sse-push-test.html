@@ -3,14 +3,13 @@
     <meta charset="UTF-8">
 </head>
 <script>
-    driverId = 1;
-    source = null;
+    userId=1;
+    identity=1;
+    source=null;
     if(window.EventSource){
         console.log("此浏览器支持SSE");
-
         //连接的建立
-        source = new EventSource("http://localhost:9000/connect/"+driverId);
-
+        source = new EventSource("http://localhost:9000/connect?userId="+userId+"&identity="+identity);
         source.addEventListener("message",function (e){
            content = e.data;
            console.log("消息内容："+content);
@@ -27,13 +26,13 @@
         console.log("close方法被调用");
         source.close();
         httpRequest = new XMLHttpRequest();
-        httpRequest.open("get","http://localhost:9000/close/"+driverId);
+        httpRequest.open("get","http://localhost:9000/close?userId="+userId+"&identity="+identity);
         httpRequest.send();
     }
 
 </script>
 <body>
-<h1>司机监听测试页面-模拟司机客户端</h1>
+<h1>监听测试页面-模拟监听客户端</h1>
 <button onclick="setMessage('鼠标点我了')">测试message消息</button>
 <div id="message">
     此处展示服务推送过来的消息<br>
