@@ -162,7 +162,7 @@ public class OrderInfoService {
 
     }
 
-    public  void dispatchOrder(OrderInfo orderInfo){
+    public  synchronized void dispatchOrder(OrderInfo orderInfo){
         String depLongitude = orderInfo.getDepLongitude();
         String depLatitude = orderInfo.getDepLatitude();
         String center = depLatitude +","+ depLongitude;
@@ -200,30 +200,26 @@ public class OrderInfoService {
                     String driverPhone = orderResponse.getDriverPhone();
                     String licenseId = orderResponse.getLicenseId();
                     String vehicleNo = orderResponse.getVehicleNo();
-
-                    synchronized ((driverId+"").intern()){
-                        //判断司机是否有正在进行的订单
-                        if (isDriverOrderGoningOn(driverId) > 0){
-                            continue ;
-                        }
-                        //订单直接匹配司机
-                        orderInfo.setDriverId(driverId);
-                        orderInfo.setDriverPhone(driverPhone);
-                        orderInfo.setCarId(carId);
-                        //从地图中获取
-                        orderInfo.setReceiveOrderCarLongitude(longitude);
-                        orderInfo.setReceiveOrderCarLatitude(latitude);
-                        orderInfo.setReceiveOrderTime(LocalDateTime.now());
-                        //从司机信息中获取
-                        orderInfo.setLicenseId(licenseId);
-                        //从车辆信息中获取
-                        orderInfo.setVehicleNo(vehicleNo);
-                        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
-                        //更新订单信息
-                        orderInfoMapper.updateById(orderInfo);
-                        break radius;
+                    //判断司机是否有正在进行的订单
+                    if (isDriverOrderGoningOn(driverId) > 0){
+                        continue ;
                     }
-
+                    //订单直接匹配司机
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(driverPhone);
+                    orderInfo.setCarId(carId);
+                    //从地图中获取
+                    orderInfo.setReceiveOrderCarLongitude(longitude);
+                    orderInfo.setReceiveOrderCarLatitude(latitude);
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
+                    //从司机信息中获取
+                    orderInfo.setLicenseId(licenseId);
+                    //从车辆信息中获取
+                    orderInfo.setVehicleNo(vehicleNo);
+                    orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+                    //更新订单信息
+                    orderInfoMapper.updateById(orderInfo);
+                    break radius;
                 }
             }
 

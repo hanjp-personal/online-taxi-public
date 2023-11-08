@@ -1,5 +1,5 @@
-server:
-  port: 8089
+#server:
+#  port: 8089
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,4 +12,16 @@ spring:
         server-addr: 127.0.0.1:8858
   application:
     name: service-order
+
+---
+spring:
+  profiles: 8089
+server:
+  port: 8089
+---
+spring:
+  profiles: 8090
+server:
+  port: 8090
+
 
