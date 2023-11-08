@@ -25,7 +25,7 @@ public class SseController {
      */
     @GetMapping("/connect")
     public SseEmitter connect(@RequestParam Long userId,@RequestParam String identity){
-        log.info("用户："+userId+"身份类型："+identity);
+        log.info("用户："+userId+" 身份类型："+identity);
         SseEmitter sseEmitter = new SseEmitter(0l);
         String sseMapKey = SsePrefixUtils.generatorSseKey(userId,identity);
         stringSseEmitterMap.put(sseMapKey,sseEmitter);
@@ -41,6 +41,7 @@ public class SseController {
      */
     @GetMapping("/push")
     public String push(@RequestParam Long userId, @RequestParam String identity, @RequestParam String content){
+        log.info("用户ID："+userId+"身份类型："+ identity);
         String sseMapKey = SsePrefixUtils.generatorSseKey(userId,identity);
         SseEmitter sseEmitter = stringSseEmitterMap.get(sseMapKey);
         try {

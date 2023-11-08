@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.Response.OrderResponse;
 import com.mashibing.internalcommon.Response.TerminalResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
+import com.mashibing.internalcommon.constant.IdentityConstants;
 import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.PriceRule;
@@ -15,8 +16,10 @@ import com.mashibing.serviceorder.mapper.OrderInfoMapper;
 import com.mashibing.serviceorder.remote.ServiceCityDriverClient;
 import com.mashibing.serviceorder.remote.ServiceMapClient;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
+import com.mashibing.serviceorder.remote.ServiceSsePushClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
@@ -49,6 +52,9 @@ public class OrderInfoService {
 
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private ServiceSsePushClient serviceSsePushClient;
 
     public ResponseResult add(OrderRequest orderRequest){
 
@@ -191,8 +197,8 @@ public class OrderInfoService {
 
                 TerminalResponse terminalResponse = data.get(j);
                 long carId = terminalResponse.getCarId();
-                String longitude = terminalResponse.getLongitude();
-                String latitude = terminalResponse.getLatitude();
+                String destlongitude = terminalResponse.getLongitude();
+                String destlatitude = terminalResponse.getLatitude();
                 //根据车辆ID，查询是否有可派用的司机
                 ResponseResult<OrderResponse> availableDriver = serviceCityDriverClient.getAvailableDriver(carId);
                 if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()){
@@ -221,8 +227,10 @@ public class OrderInfoService {
                     orderInfo.setDriverPhone(driverPhone);
                     orderInfo.setCarId(carId);
                     //从地图中获取
-                    orderInfo.setReceiveOrderCarLongitude(longitude);
-                    orderInfo.setReceiveOrderCarLatitude(latitude);
+                    orderInfo.setDestLongitude(destlongitude);
+                    orderInfo.setDestLatitude(destlatitude);
+                    orderInfo.setReceiveOrderCarLongitude(depLongitude);
+                    orderInfo.setReceiveOrderCarLatitude(depLatitude);
                     orderInfo.setReceiveOrderTime(LocalDateTime.now());
                     //从司机信息中获取
                     orderInfo.setLicenseId(licenseId);
@@ -231,6 +239,19 @@ public class OrderInfoService {
                     orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
                     //更新订单信息
                     orderInfoMapper.updateById(orderInfo);
+
+                    //通知司机
+                    JSONObject driverContent = new JSONObject();
+                    driverContent.put("passengerId",orderInfo.getPassengerId());
+                    driverContent.put("passengerPhone",orderInfo.getPassengerPhone());
+                    driverContent.put("departure",orderInfo.getDeparture());
+                    driverContent.put("depLongitude",orderInfo.getDepLongitude());
+                    driverContent.put("depLatitude",orderInfo.getDepLatitude());
+                    driverContent.put("destination",orderInfo.getDestination());
+                    driverContent.put("destLongitude",orderInfo.getDestLongitude());
+                    driverContent.put("destLatitude",orderInfo.getDestLatitude());
+
+                    serviceSsePushClient.push(driverId, IdentityConstants.DRIVER_IDENTITY,driverContent.toString());
 
                     lock.unlock();
                     break radius;
