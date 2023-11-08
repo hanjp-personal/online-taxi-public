@@ -17,6 +17,8 @@ import com.mashibing.serviceorder.remote.ServiceMapClient;
 import com.mashibing.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -44,6 +46,9 @@ public class OrderInfoService {
 
     @Autowired
     private ServiceMapClient serviceMapClient;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     public ResponseResult add(OrderRequest orderRequest){
 
@@ -200,8 +205,15 @@ public class OrderInfoService {
                     String driverPhone = orderResponse.getDriverPhone();
                     String licenseId = orderResponse.getLicenseId();
                     String vehicleNo = orderResponse.getVehicleNo();
+
+                    String lockKey = (driverId+"").intern();
+                    RLock lock = redissonClient.getLock(lockKey);
+                    lock.lock();
+
                     //判断司机是否有正在进行的订单
                     if (isDriverOrderGoningOn(driverId) > 0){
+                        //此处不进行处理，会造成死锁的问题
+                        lock.unlock();
                         continue ;
                     }
                     //订单直接匹配司机
@@ -219,6 +231,8 @@ public class OrderInfoService {
                     orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
                     //更新订单信息
                     orderInfoMapper.updateById(orderInfo);
+
+                    lock.unlock();
                     break radius;
                 }
             }
