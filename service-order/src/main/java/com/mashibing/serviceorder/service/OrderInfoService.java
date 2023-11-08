@@ -6,6 +6,7 @@ import com.mashibing.internalcommon.Response.TerminalResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.IdentityConstants;
 import com.mashibing.internalcommon.constant.OrderConstants;
+import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.PriceRule;
 import com.mashibing.internalcommon.dto.ResponseResult;
@@ -252,6 +253,22 @@ public class OrderInfoService {
                     driverContent.put("destLatitude",orderInfo.getDestLatitude());
 
                     serviceSsePushClient.push(driverId, IdentityConstants.DRIVER_IDENTITY,driverContent.toString());
+
+                    //通知乘客
+                    JSONObject passengerContent = new JSONObject();
+                    passengerContent.put("driverId",orderInfo.getDriverId());
+                    passengerContent.put("driverPhone",orderInfo.getDriverPhone());
+                    passengerContent.put("vehicleNo",orderInfo.getVehicleNo());
+                    //车辆信息，根据车辆ID 查询车辆信息
+                    ResponseResult<Car> carResponseResult = serviceCityDriverClient.getCarById(orderInfo.getCarId());
+                    Car carRemote = carResponseResult.getData();
+                    passengerContent.put("brand",carRemote.getBrand());
+                    passengerContent.put("model",carRemote.getModel());
+                    passengerContent.put("vehicleColor",carRemote.getVehicleColor());
+                    passengerContent.put("receiveOrderCarLongitude",orderInfo.getReceiveOrderCarLongitude());
+                    passengerContent.put("receiveOrderCarLatitude",orderInfo.getReceiveOrderCarLatitude());
+
+                    serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstants.PASSENGER_IDENTITY,passengerContent.toString());
 
                     lock.unlock();
                     break radius;

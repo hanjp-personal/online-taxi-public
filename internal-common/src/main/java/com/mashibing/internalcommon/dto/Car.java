@@ -64,7 +64,7 @@ public class Car implements Serializable {
     /**
      * 车身颜色
      */
-    private String vehivleColor;
+    private String vehicleColor;
 
     /**
      * 发动机号
