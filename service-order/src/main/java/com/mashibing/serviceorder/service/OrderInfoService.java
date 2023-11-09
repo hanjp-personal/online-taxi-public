@@ -57,6 +57,11 @@ public class OrderInfoService {
     @Autowired
     private ServiceSsePushClient serviceSsePushClient;
 
+    /**
+     * 新建订单
+     * @param orderRequest
+     * @return
+     */
     public ResponseResult add(OrderRequest orderRequest){
 
         //根据城市代码查询当前城市是否有司机
@@ -102,7 +107,10 @@ public class OrderInfoService {
 
         for (int i = 0; i < 6; i++) {
             //创建成功后进行实时派单
-            dispatchOrder(orderInfo);
+            int orderResult = dispatchOrder(orderInfo);
+            if (orderResult == 1){
+                break;
+            }
             try {
                 Thread.sleep(2);
             } catch (InterruptedException e) {
@@ -112,6 +120,11 @@ public class OrderInfoService {
         return ResponseResult.success(orderInfo);
     }
 
+    /**
+     * 是否是黑名单
+     * @param orderRequest
+     * @return
+     */
     private boolean isBalckDevice(OrderRequest orderRequest) {
         String deviceCodeKey = RedisPrefixUtils.BlackDeviceCodePrefix + orderRequest.getDeviceCode();
         Boolean aBoolean = stringRedisTemplate.hasKey(deviceCodeKey);
@@ -166,6 +179,11 @@ public class OrderInfoService {
         return result;
     }
 
+    /**
+     * 计价规则是否存在
+     * @param orderRequest
+     * @return
+     */
     public Boolean priceRuleIsExist(OrderRequest orderRequest){
         String fareType = orderRequest.getFareType();
         int index = fareType.indexOf("$");
@@ -181,7 +199,11 @@ public class OrderInfoService {
 
     }
 
-    public  synchronized void dispatchOrder(OrderInfo orderInfo){
+    /**
+     * 实时派单逻辑
+     * @param orderInfo
+     */
+    public int dispatchOrder(OrderInfo orderInfo){
         log.info("循环一次");
         int result = 0;
         String depLongitude = orderInfo.getDepLongitude();
@@ -223,7 +245,7 @@ public class OrderInfoService {
                     String driverPhone = orderResponse.getDriverPhone();
                     String licenseId = orderResponse.getLicenseId();
                     String vehicleNo = orderResponse.getVehicleNo();
-
+                    //创建Redisson锁
                     String lockKey = (driverId+"").intern();
                     RLock lock = redissonClient.getLock(lockKey);
                     lock.lock();
@@ -287,5 +309,34 @@ public class OrderInfoService {
             }
 
         }
+        return result;
+    }
+
+    /**
+     * 去接乘客
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult toPickUpPassenger(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        String toPickUpPassengerLongitude = orderRequest.getToPickUpPassengerLongitude();
+        String toPickUpPassengerLatitude = orderRequest.getToPickUpPassengerLatitude();
+        String toPickUpPassengerAddress = orderRequest.getToPickUpPassengerAddress();
+        //根据订单ID查询订单数据
+        QueryWrapper orderInfoQueryWrapper = new QueryWrapper();
+        orderInfoQueryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(orderInfoQueryWrapper);
+        orderInfo.setToPickUpPassengerLongitude(toPickUpPassengerLongitude);
+        orderInfo.setToPickUpPassengerLatitude(toPickUpPassengerLatitude);
+        orderInfo.setToPickUpPassengerAddress(toPickUpPassengerAddress);
+        orderInfo.setToPickUpPassengerTime(LocalDateTime.now());
+        //更改订单状态
+        orderInfo.setOrderStatus(OrderConstants.DRIVER_TO_PICK_UP_PASSENGER);
+        //更新数据库
+        orderInfoMapper.updateById(orderInfo);
+
+        return ResponseResult.success("");
+
+
     }
  }

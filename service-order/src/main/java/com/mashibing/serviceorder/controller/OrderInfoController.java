@@ -16,8 +16,24 @@ public class OrderInfoController {
     @Autowired
     private OrderInfoService orderInfoService;
 
+    /**
+     * 新建订单
+     * @param orderRequest
+     * @return
+     */
     @PostMapping("/add")
     public ResponseResult add(@RequestBody OrderRequest orderRequest){
         return orderInfoService.add(orderRequest);
     }
+
+    /**
+     * 去接乘客
+     * @param orderRequest
+     * @return
+     */
+    @PostMapping("/to-pick-up-passenger")
+    public ResponseResult toPickUpPassenger(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.toPickUpPassenger(orderRequest);
+    }
+
 }
