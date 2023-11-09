@@ -21,6 +21,11 @@ public class ServiceClient {
     @Autowired
     private RestTemplate restTemplate;//调用第三方接口
 
+    /**
+     * 创建服务
+     * @param name
+     * @return
+     */
     public ResponseResult createService(String name){
         //组装
         StringBuilder urlBuilder = new StringBuilder();
@@ -30,10 +35,10 @@ public class ServiceClient {
         urlBuilder.append("&");
         urlBuilder.append("name=" + name);
         //调用高德地图API接口
-        log.info("处理高德地图请求："+urlBuilder.toString());
+        log.info("处理高德地图创建服务请求："+urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
         String result = stringResponseEntity.getBody();
-        log.info("处理高德地图响应："+stringResponseEntity.getBody());
+        log.info("处理高德地图创建服务响应："+stringResponseEntity.getBody());
         JSONObject data = JSONObject.fromObject(result);
         JSONObject jsonObject = data.getJSONObject("data");
         String sid = jsonObject.getString("sid");

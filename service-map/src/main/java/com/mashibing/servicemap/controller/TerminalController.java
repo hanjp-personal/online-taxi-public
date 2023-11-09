@@ -1,6 +1,7 @@
 package com.mashibing.servicemap.controller;
 
 import com.mashibing.internalcommon.Response.TerminalResponse;
+import com.mashibing.internalcommon.Response.TrsearchResponse;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.servicemap.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class TerminalController {
 
     }
     @PostMapping("/trsearch")
-    public ResponseResult trsearch(@RequestParam String tid,@RequestParam Long starttime,@RequestParam Long endtime){
+    public ResponseResult<TrsearchResponse> trsearch(@RequestParam String tid, @RequestParam Long starttime, @RequestParam Long endtime){
         return terminalService.trsearch(tid,starttime,endtime);
     }
 }

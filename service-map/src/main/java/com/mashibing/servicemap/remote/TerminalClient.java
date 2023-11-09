@@ -1,6 +1,7 @@
 package com.mashibing.servicemap.remote;
 
 import com.mashibing.internalcommon.Response.TerminalResponse;
+import com.mashibing.internalcommon.Response.TrsearchResponse;
 import com.mashibing.internalcommon.constant.AmapConfigComstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,12 @@ public class TerminalClient {
     @Autowired
     private RestTemplate restTemplate;//调用第三方接口
 
+    /**
+     * 创建终端
+     * @param name
+     * @param desc
+     * @return
+     */
     public ResponseResult<TerminalResponse> createTerminal(String name, Long desc){
 
         StringBuilder urlBuilder = new StringBuilder();
@@ -39,9 +46,9 @@ public class TerminalClient {
         urlBuilder.append("name=" + name);
         urlBuilder.append("&");
         urlBuilder.append("desc=" + desc);
-        System.out.println("调用前的高德请求："+ urlBuilder.toString());
+        System.out.println("调用前的高德创建终端请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
-        System.out.println("调用后的高得请求:"+ stringResponseEntity.getBody());
+        System.out.println("调用后的高德创建终端请求:"+ stringResponseEntity.getBody());
         String body = stringResponseEntity.getBody();
         JSONObject jsonObject = JSONObject.fromObject(body);
         String data = jsonObject.getString("data");
@@ -52,6 +59,13 @@ public class TerminalClient {
         terminalResponse.setCarId(desc);
         return ResponseResult.success(terminalResponse);
     }
+
+    /**
+     * 周边搜索
+     * @param center
+     * @param radius
+     * @return
+     */
     public ResponseResult<List<TerminalResponse>>  aroundsearch(String center,Integer radius){
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigComstants.TERMINAL_AROUNFSEARCH_URL);
@@ -63,9 +77,9 @@ public class TerminalClient {
         urlBuilder.append("center=" + center);
         urlBuilder.append("&");
         urlBuilder.append("radius=" + radius);
-        log.info("调用前的高德请求："+ urlBuilder.toString());
+        log.info("调用前的高德周边搜索请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
-        log.info("调用后的高德响应:"+ stringResponseEntity.getBody());
+        log.info("调用后的高德周边搜索响应:"+ stringResponseEntity.getBody());
 
         List<TerminalResponse> terminalResponseList = new ArrayList<>();
 
@@ -97,7 +111,14 @@ public class TerminalClient {
         return ResponseResult.success(terminalResponseList);
     }
 
-    public ResponseResult trsearch(String tid, Long starttime,Long endtime){
+    /**
+     * 轨迹查询
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime,Long endtime){
 
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigComstants.TRSEARCH_URL);
@@ -114,7 +135,26 @@ public class TerminalClient {
         log.info("调用前的高德轨迹查询请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
         log.info("调用后的高德轨迹查询响应:"+ stringResponseEntity.getBody());
-        String body = stringResponseEntity.getBody();
-        return null;
+        JSONObject data = JSONObject.fromObject(stringResponseEntity.getBody());
+        JSONObject result = data.getJSONObject("data");
+        int counts = result.getInt("counts");
+        if (counts == 0){
+            return null;
+        }
+        JSONArray tracks = result.getJSONArray("tracks");
+        long driverMile = 0l;
+        long driverTime = 0l;
+        for (int i = 0; i < tracks.size(); i++) {
+            JSONObject tracksJSONObject = tracks.getJSONObject(i);
+            long distance = tracksJSONObject.getLong("distance");
+            long time = tracksJSONObject.getLong("time");
+            time = time / (1000 * 60);
+            driverMile = driverMile + distance;
+            driverTime = driverTime + time;
+        }
+        TrsearchResponse trsearchResponse = new TrsearchResponse();
+        trsearchResponse.setDriverMile(driverMile);
+        trsearchResponse.setDriverTime(driverTime);
+        return ResponseResult.success(trsearchResponse);
     }
 }

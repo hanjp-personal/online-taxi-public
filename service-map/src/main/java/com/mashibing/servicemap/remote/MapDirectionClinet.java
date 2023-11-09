@@ -76,7 +76,6 @@ public class MapDirectionClinet {
                     }
                 }
             }
-
         }catch (Exception e){
 
         }

@@ -25,6 +25,11 @@ public class PointsClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * 上传轨迹点
+     * @param pointsRequest
+     * @return
+     */
     public ResponseResult upload(PointsRequest pointsRequest){
 
         StringBuilder urlBuilder = new StringBuilder();
@@ -57,9 +62,9 @@ public class PointsClient {
         }
         urlBuilder.append("%5D");
 
-        log.info("处理高德地图请求："+urlBuilder.toString());
+        log.info("处理高德地图上传轨迹点请求："+urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(URI.create(urlBuilder.toString()), null, String.class);
-        log.info("处理高德地图响应："+stringResponseEntity.getBody());
+        log.info("处理高德地图上传轨迹点响应："+stringResponseEntity.getBody());
         return ResponseResult.success("");
     }
 

@@ -23,6 +23,11 @@ public class TrackClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * 创建轨迹
+     * @param tid
+     * @return
+     */
     public ResponseResult<TrackResponse> addTrack(String tid){
 
         StringBuilder urlBuilder = new StringBuilder();
@@ -33,9 +38,9 @@ public class TrackClient {
         urlBuilder.append("sid="+ amapsid);
         urlBuilder.append("&");
         urlBuilder.append("tid="+tid);
-        log.info("处理高德地图请求："+ urlBuilder.toString());
+        log.info("处理高德地图创建轨迹请求："+ urlBuilder.toString());
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
-        log.info("处理高德地图响应："+stringResponseEntity.getBody());
+        log.info("处理高德地图创建轨迹响应："+stringResponseEntity.getBody());
         String body = stringResponseEntity.getBody();
         JSONObject jsonObject = JSONObject.fromObject(body);
         JSONObject data = jsonObject.getJSONObject("data");
