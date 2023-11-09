@@ -47,6 +47,10 @@ public class OrderInfo implements Serializable {
      * 车辆ID
      */
     private Long carId;
+    /**
+     * 车辆类型
+     */
+    private String vehicleType;
 
     /**
      * 发起地行政区划代码

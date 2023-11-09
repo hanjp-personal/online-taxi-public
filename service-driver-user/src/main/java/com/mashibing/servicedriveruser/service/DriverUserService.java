@@ -121,6 +121,7 @@ public class DriverUserService {
                 orderResponse.setDriverPhone(driverUser.getDriverPhone());
                 orderResponse.setLicenseId(driverUser.getLicenseId());
                 orderResponse.setVehicleNo(car.getVehicleNo());
+                orderResponse.setVehicleType(car.getVehicleType());
                 return ResponseResult.success(orderResponse);
             }
         }

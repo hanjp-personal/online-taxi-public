@@ -20,4 +20,9 @@ public class OrderResponse {
      * 车牌号
      */
     private String vehicleNo;
+    /**
+     * 车辆类型
+     */
+    private String vehicleType;
+
 }

@@ -248,6 +248,15 @@ public class OrderInfoService {
                     String driverPhone = orderResponse.getDriverPhone();
                     String licenseId = orderResponse.getLicenseId();
                     String vehicleNo = orderResponse.getVehicleNo();
+                    String vehicleTypeFromCar = orderResponse.getVehicleType();
+
+                    String vehicleType = orderInfo.getVehicleType();
+
+                    if (vehicleType.trim().equals(vehicleTypeFromCar.trim())){
+                        log.info("车型不符合！");
+                        continue ;
+                    }
+
                     //创建Redisson锁
                     String lockKey = (driverId+"").intern();
                     RLock lock = redissonClient.getLock(lockKey);

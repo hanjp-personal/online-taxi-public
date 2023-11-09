@@ -19,14 +19,24 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ForeCastPriceService {
+public class PriceService {
 
     @Autowired
     private ServiceMapClient serviceMapClient;
     @Autowired
     private PriceRuleMapper priceRuleMapper;
 
-    public ResponseResult forecasrPrice(String depLongitude, String deplatitude,String destLongitude,String destlatitude,String cityCode,String vehicleType){
+    /**
+     * 计算预估价格
+     * @param depLongitude
+     * @param deplatitude
+     * @param destLongitude
+     * @param destlatitude
+     * @param cityCode
+     * @param vehicleType
+     * @return
+     */
+    public ResponseResult forecasrPrice(String depLongitude, String deplatitude, String destLongitude, String destlatitude, String cityCode, String vehicleType){
         log.info("出发地经度： "+ depLongitude);
         log.info("出发地纬度： "+ deplatitude);
         log.info("目的地经度： "+ destLongitude);
@@ -72,6 +82,31 @@ public class ForeCastPriceService {
         foreCastPriceResponse.setFareVersion(priceRule.getFareVersion());
         return ResponseResult.success(foreCastPriceResponse);
     }
+
+    /**
+     * 计算实际价格
+     * @param distance
+     * @param duration
+     * @param cityCode
+     * @param vehicleType
+     * @return
+     */
+    public ResponseResult calculatePrice(Integer distance, Integer duration,String cityCode,String vehicleType){
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("city_code",cityCode);
+        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.orderByDesc("fare_version");
+        List<PriceRule> priceRules= priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.size() == 0){
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+        }
+
+        PriceRule priceRule = priceRules.get(0);
+
+        log.info("根据距离、时长、计价规则，计算实际价格");
+        double price = getPrice(distance, duration, priceRule);
+        return ResponseResult.success(price);
+    }
     /**
      * 根据距离、时长和计价规则，计算最终价格
      * @param distance  距离
@@ -79,7 +114,7 @@ public class ForeCastPriceService {
      * @param priceRule 计价规则
      * @return
      */
-    private double getPrice(Integer distance, Integer duration, PriceRule priceRule){
+    public double getPrice(Integer distance, Integer duration, PriceRule priceRule){
         double price = 0;
         //起步价
         double startFare = priceRule.getStartFare();
