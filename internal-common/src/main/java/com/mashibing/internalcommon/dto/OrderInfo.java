@@ -208,7 +208,7 @@ public class OrderInfo implements Serializable {
     /**
      * 载客时间（分钟）
      */
-    private LocalDateTime driverTime;
+    private Long driverTime;
 
     /**
      * 订单状态，1:订单开始；2:司机接单；3:去接乘客；4:司机到达上车点；5:乘客上车，司机开始行程；6:到达目的地，行程结束，未支付；7:发起收款；8:支付完成；9:订单取消

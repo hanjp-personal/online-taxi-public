@@ -3,6 +3,7 @@ package com.mashibing.serviceorder.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.Response.OrderResponse;
 import com.mashibing.internalcommon.Response.TerminalResponse;
+import com.mashibing.internalcommon.Response.TrsearchResponse;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.IdentityConstants;
 import com.mashibing.internalcommon.constant.OrderConstants;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -399,8 +401,13 @@ public class OrderInfoService {
         orderInfo.setPassengerGetoffTime(LocalDateTime.now());
         orderInfo.setOrderStatus(OrderConstants.PASSENGER_GETOFF);
 
-        //计算行驶里程和时间
+        //从地图中获取行驶里程和时间
+        ResponseResult<Car> car = serviceCityDriverClient.getCarById(orderInfo.getCarId());
+        ResponseResult<TrsearchResponse> trsearch = serviceMapClient.trsearch(car.getData().getTid(), orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli(), LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
 
+        TrsearchResponse data = trsearch.getData();
+        orderInfo.setDriverMile(data.getDriverMile());
+        orderInfo.setDriverTime(data.getDriverTime());
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
