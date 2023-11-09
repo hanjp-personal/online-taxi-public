@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -375,11 +376,32 @@ public class OrderInfoService {
         orderInfo.setPickUpPassengerTime(LocalDateTime.now());
 
         orderInfo.setOrderStatus(OrderConstants.PICK_UP_PASSENGER);
-
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
 
+    /**
+     * 司机到达目的地，乘客下车
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        String passengerGetoffLongitude = orderRequest.getPassengerGetoffLongitude();
+        String passengerGetoffLatitude = orderRequest.getPassengerGetoffLatitude();
 
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        orderInfo.setPassengerGetoffLongitude(passengerGetoffLongitude);
+        orderInfo.setPassengerGetoffLatitude(passengerGetoffLatitude);
 
+        orderInfo.setPassengerGetoffTime(LocalDateTime.now());
+        orderInfo.setOrderStatus(OrderConstants.PASSENGER_GETOFF);
+
+        //计算行驶里程和时间
+        
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
  }

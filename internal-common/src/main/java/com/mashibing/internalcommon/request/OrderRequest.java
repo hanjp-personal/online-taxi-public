@@ -76,4 +76,14 @@ public class OrderRequest {
      */
     private String pickUpPassengerLatitude;
 
+    /**
+     * 乘客下车的经度
+     */
+    private String passengerGetoffLongitude;
+
+    /**
+     * 乘客下车的纬度
+     */
+    private String passengerGetoffLatitude;
+
 }
