@@ -357,4 +357,29 @@ public class OrderInfoService {
         return ResponseResult.success("");
     }
 
+    /**
+     * 司机接到乘客
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult pickUpPassenger(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        String pickUpPassengerLongitude = orderRequest.getPickUpPassengerLongitude();
+        String pickUpPassengerLatitude = orderRequest.getPickUpPassengerLatitude();
+
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
+        orderInfo.setPickUpPassengerLongitude(pickUpPassengerLongitude);
+        orderInfo.setPickUpPassengerLatitude(pickUpPassengerLatitude);
+        orderInfo.setPickUpPassengerTime(LocalDateTime.now());
+
+        orderInfo.setOrderStatus(OrderConstants.PICK_UP_PASSENGER);
+
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
+
+
+
  }

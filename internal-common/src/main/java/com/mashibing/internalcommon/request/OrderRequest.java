@@ -52,12 +52,6 @@ public class OrderRequest {
     private String deviceCode;
 
     /**
-     * 司机去接乘客的出发时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime toPickUpPassengerTime;
-
-    /**
      * 去接乘客时司机的经度
      */
     private String toPickUpPassengerLongitude;
@@ -71,5 +65,15 @@ public class OrderRequest {
      * 去接乘客时司机的地点
      */
     private String toPickUpPassengerAddress;
+
+    /**
+     * 乘客上车的经度
+     */
+    private String pickUpPassengerLongitude;
+
+    /**
+     * 乘客上车的纬度
+     */
+    private String pickUpPassengerLatitude;
 
 }
