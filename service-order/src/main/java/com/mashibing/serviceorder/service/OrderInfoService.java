@@ -323,7 +323,7 @@ public class OrderInfoService {
         String toPickUpPassengerLatitude = orderRequest.getToPickUpPassengerLatitude();
         String toPickUpPassengerAddress = orderRequest.getToPickUpPassengerAddress();
         //根据订单ID查询订单数据
-        QueryWrapper orderInfoQueryWrapper = new QueryWrapper();
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper();
         orderInfoQueryWrapper.eq("id",orderId);
         OrderInfo orderInfo = orderInfoMapper.selectOne(orderInfoQueryWrapper);
         orderInfo.setToPickUpPassengerLongitude(toPickUpPassengerLongitude);
@@ -334,9 +334,27 @@ public class OrderInfoService {
         orderInfo.setOrderStatus(OrderConstants.DRIVER_TO_PICK_UP_PASSENGER);
         //更新数据库
         orderInfoMapper.updateById(orderInfo);
-
         return ResponseResult.success("");
 
 
     }
+
+    /**
+     * 司机到达乘客上车点
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult driverArrivedDeparture(OrderRequest orderRequest){
+
+        Long orderId = orderRequest.getOrderId();
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
+        orderInfo.setDriverArrivedDepartureTime(LocalDateTime.now());
+        orderInfo.setOrderStatus(OrderConstants.DRIVER_ARRIVED_DEPARTURE);
+
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
+
  }
