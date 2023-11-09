@@ -96,4 +96,25 @@ public class TerminalClient {
         }
         return ResponseResult.success(terminalResponseList);
     }
+
+    public ResponseResult trsearch(String tid, Long starttime,Long endtime){
+
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append(AmapConfigComstants.TRSEARCH_URL);
+        urlBuilder.append("?");
+        urlBuilder.append("key="+amapkey);
+        urlBuilder.append("&");
+        urlBuilder.append("sid="+amapsid);
+        urlBuilder.append("&");
+        urlBuilder.append("tid=" + tid);
+        urlBuilder.append("&");
+        urlBuilder.append("starttime=" + starttime);
+        urlBuilder.append("&");
+        urlBuilder.append("endtime=" + endtime);
+        log.info("调用前的高德轨迹查询请求："+ urlBuilder.toString());
+        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(urlBuilder.toString(), null, String.class);
+        log.info("调用后的高德轨迹查询响应:"+ stringResponseEntity.getBody());
+        String body = stringResponseEntity.getBody();
+        return null;
+    }
 }

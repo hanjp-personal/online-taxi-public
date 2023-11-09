@@ -400,7 +400,7 @@ public class OrderInfoService {
         orderInfo.setOrderStatus(OrderConstants.PASSENGER_GETOFF);
 
         //计算行驶里程和时间
-        
+
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
