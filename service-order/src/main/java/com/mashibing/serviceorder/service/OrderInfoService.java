@@ -100,8 +100,15 @@ public class OrderInfoService {
         orderInfo.setGmtModified(now);
         orderInfoMapper.insert(orderInfo);
 
-        //创建成功后进行实时派单
-        dispatchOrder(orderInfo);
+        for (int i = 0; i < 6; i++) {
+            //创建成功后进行实时派单
+            dispatchOrder(orderInfo);
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return ResponseResult.success(orderInfo);
     }
 
@@ -175,6 +182,8 @@ public class OrderInfoService {
     }
 
     public  synchronized void dispatchOrder(OrderInfo orderInfo){
+        log.info("循环一次");
+        int result = 0;
         String depLongitude = orderInfo.getDepLongitude();
         String depLatitude = orderInfo.getDepLatitude();
         String center = depLatitude +","+ depLongitude;
@@ -194,6 +203,8 @@ public class OrderInfoService {
 
             //解析数据，获取车辆ID
             List<TerminalResponse> data = listResponseResult.getData();
+            //为了测试循环找车辆业务功能
+//            List<TerminalResponse> data = new ArrayList<>();
             for (int j = 0; j < data.size(); j++) {
 
                 TerminalResponse terminalResponse = data.get(j);
@@ -269,7 +280,7 @@ public class OrderInfoService {
                     passengerContent.put("receiveOrderCarLatitude",orderInfo.getReceiveOrderCarLatitude());
 
                     serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstants.PASSENGER_IDENTITY,passengerContent.toString());
-
+                    result = 1;
                     lock.unlock();
                     break radius;
                 }
