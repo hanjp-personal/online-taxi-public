@@ -1,4 +1,4 @@
-package com.mashibing.servicepay;
+package com.mashibing.servicepay.config;
 
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.Config;

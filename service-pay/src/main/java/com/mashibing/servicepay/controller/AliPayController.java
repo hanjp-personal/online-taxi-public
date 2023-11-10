@@ -1,7 +1,9 @@
-package com.mashibing.servicepay;
+package com.mashibing.servicepay.controller;
 
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
+import com.mashibing.servicepay.service.AliPayService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,9 @@ import java.util.Map;
 @ResponseBody
 @RequestMapping("/alipay")
 public class AliPayController {
+
+    @Autowired
+    private AliPayService aliPayService;
 
     @GetMapping("/pay")
     public String pay(String subject,String outTradeNo,String totalAmount){
@@ -41,10 +46,11 @@ public class AliPayController {
             }
             if (Factory.Payment.Common().verifyNotify(param)){
                 System.out.println("支付宝验证通过");
-                for (String nameParam : param.keySet()) {
-                    System.out.println("收到并且接受的参数：");
-                    System.out.println(nameParam + "，"+ param.get(nameParam));
-                }
+
+                String outTradeNo = param.get("out_trade_no");
+                Long orderId = Long.parseLong(outTradeNo);
+                aliPayService.pay(orderId);
+
             }else {
                 System.out.println("支付宝验证不通过");
             }
