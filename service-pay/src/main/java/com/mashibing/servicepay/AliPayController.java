@@ -1,4 +1,4 @@
-package com.mashibing.testalipay;
+package com.mashibing.servicepay;
 
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
