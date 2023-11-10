@@ -13,7 +13,7 @@ public class PriceController {
     private PriceService priceService;
 
     @PostMapping("/forecast-price")
-    public ResponseResult forecastPrice(@RequestBody ForeCastPriceDTO foreCastPriceDTO){
+    public ResponseResult<Double> forecastPrice(@RequestBody ForeCastPriceDTO foreCastPriceDTO){
         String depLongitude = foreCastPriceDTO.getDepLongitude();
         String deplatitude = foreCastPriceDTO.getDeplatitude();
         String destLongitude = foreCastPriceDTO.getDestLongitude();
@@ -23,7 +23,7 @@ public class PriceController {
         return priceService.forecasrPrice(depLongitude,deplatitude,destLongitude,destlatitude,cityCode,vehicleType);
     }
     @PostMapping("/calculate-price")
-    public ResponseResult calculatePrice(@RequestParam Integer distance, @RequestParam Integer duration, @RequestParam String cityCode,@RequestParam String vehicleType){
+    public ResponseResult<Double> calculatePrice(@RequestParam Integer distance, @RequestParam Integer duration, @RequestParam String cityCode,@RequestParam String vehicleType){
         return priceService.calculatePrice(distance,duration,cityCode,vehicleType);
     }
 

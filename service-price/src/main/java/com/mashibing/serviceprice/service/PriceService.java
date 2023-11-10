@@ -36,7 +36,7 @@ public class PriceService {
      * @param vehicleType
      * @return
      */
-    public ResponseResult forecasrPrice(String depLongitude, String deplatitude, String destLongitude, String destlatitude, String cityCode, String vehicleType){
+    public ResponseResult<Double> forecasrPrice(String depLongitude, String deplatitude, String destLongitude, String destlatitude, String cityCode, String vehicleType){
         log.info("出发地经度： "+ depLongitude);
         log.info("出发地纬度： "+ deplatitude);
         log.info("目的地经度： "+ destLongitude);
@@ -91,7 +91,7 @@ public class PriceService {
      * @param vehicleType
      * @return
      */
-    public ResponseResult calculatePrice(Integer distance, Integer duration,String cityCode,String vehicleType){
+    public ResponseResult<Double> calculatePrice(Integer distance, Integer duration,String cityCode,String vehicleType){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("city_code",cityCode);
         queryWrapper.eq("vehicle_type",vehicleType);

@@ -415,9 +415,16 @@ public class OrderInfoService {
         ResponseResult<TrsearchResponse> trsearch = serviceMapClient.trsearch(car.getData().getTid(), orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli(), LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
 
         TrsearchResponse data = trsearch.getData();
-        orderInfo.setDriverMile(data.getDriverMile());
-        orderInfo.setDriverTime(data.getDriverTime());
+        Long driverMile = data.getDriverMile();
+        Long driverTime = data.getDriverTime();
+        orderInfo.setDriverMile(driverMile);
+        orderInfo.setDriverTime(driverTime);
+        String cityCode = orderInfo.getAddress();
+        String vehicleType = orderInfo.getVehicleType();
+        ResponseResult<Double> responseResult = servicePriceClient.calculatePrice(driverMile.intValue(), driverTime.intValue(), cityCode, vehicleType);
+        Double price = responseResult.getData();
+        orderInfo.setPrice(price);
         orderInfoMapper.updateById(orderInfo);
-        return ResponseResult.success("");
+        return ResponseResult.success(price);
     }
  }

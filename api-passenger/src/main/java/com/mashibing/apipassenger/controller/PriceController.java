@@ -1,6 +1,6 @@
 package com.mashibing.apipassenger.controller;
 
-import com.mashibing.apipassenger.service.ForeCastPriceService;
+import com.mashibing.apipassenger.service.PriceService;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.ForeCastPriceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ForeCastPriceController {
+public class PriceController {
 
     @Autowired
-    private ForeCastPriceService foreCastPriceService;
+    private PriceService priceService;
 
     @PostMapping("/forecast-price")
-    public ResponseResult ForecastPrice(@RequestBody ForeCastPriceDTO foreCastPriceDTO){
+    public ResponseResult<Double> ForecastPrice(@RequestBody ForeCastPriceDTO foreCastPriceDTO){
         String depLongitude = foreCastPriceDTO.getDepLongitude();
         String deplatitude = foreCastPriceDTO.getDeplatitude();
         String destLongitude = foreCastPriceDTO.getDestLongitude();
         String destlatitude = foreCastPriceDTO.getDestlatitude();
         String cityCode = foreCastPriceDTO.getCityCode();
         String vehicleType = foreCastPriceDTO.getVehicleType();
-        return foreCastPriceService.forecasrPrice(depLongitude,deplatitude,destLongitude,destlatitude,cityCode,vehicleType);
+        return priceService.forecasrPrice(depLongitude,deplatitude,destLongitude,destlatitude,cityCode,vehicleType);
     }
 }

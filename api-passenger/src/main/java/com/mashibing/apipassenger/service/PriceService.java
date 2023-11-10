@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ForeCastPriceService {
+public class PriceService {
 
     @Autowired
     private ServicePriceClient servicePriceClient;
 
-    public ResponseResult forecasrPrice(String depLongitude, String deplatitude,String destLongitude,String destlatitude,String cityCode,String vehicleType){
+    public ResponseResult<Double> forecasrPrice(String depLongitude, String deplatitude,String destLongitude,String destlatitude,String cityCode,String vehicleType){
         log.info("出发地经度： "+ depLongitude);
         log.info("出发地纬度： "+ deplatitude);
         log.info("目的地经度： "+ destLongitude);
