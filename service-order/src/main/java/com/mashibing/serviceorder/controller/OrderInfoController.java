@@ -4,10 +4,7 @@ import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.serviceorder.service.OrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -70,5 +67,9 @@ public class OrderInfoController {
     @PostMapping("/pay")
     public ResponseResult pay(@RequestBody OrderRequest orderRequest){
         return orderInfoService.pay(orderRequest);
+    }
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identity){
+        return orderInfoService.cancel(orderId,identity);
     }
 }

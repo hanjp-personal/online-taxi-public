@@ -31,7 +31,6 @@ public class AliPayController {
             throw new RuntimeException(e);
         }
         return response.getBody();
-
     }
 
     @PostMapping("/notify")
@@ -54,11 +53,7 @@ public class AliPayController {
             }else {
                 System.out.println("支付宝验证不通过");
             }
-
-
         }
         return "success";
-
-
     }
 }
