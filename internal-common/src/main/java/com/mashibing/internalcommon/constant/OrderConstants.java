@@ -2,7 +2,7 @@ package com.mashibing.internalcommon.constant;
 
 public class OrderConstants {
 
-    public static final int ORDER_CANCEL = 0;
+//    public static final int ORDER_CANCEL  = 0;
 
     public static final int ORDER_START = 1;
 
@@ -20,7 +20,7 @@ public class OrderConstants {
 
     public static final int SUCCESS_PAY = 8;
 
-    public static final int CANCEL_PAY = 9;
+    public static final int ORDER_CANCEL = 9;
 
     /**
      * 乘客提起取消
