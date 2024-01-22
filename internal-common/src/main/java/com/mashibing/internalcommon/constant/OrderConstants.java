@@ -2,7 +2,7 @@ package com.mashibing.internalcommon.constant;
 
 public class OrderConstants {
 
-//    public static final int ORDER_CANCEL  = 0;
+    public static final int ORDER_INVALID  = 0;
 
     public static final int ORDER_START = 1;
 
