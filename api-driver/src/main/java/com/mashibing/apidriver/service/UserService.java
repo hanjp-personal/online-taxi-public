@@ -1,7 +1,8 @@
 package com.mashibing.apidriver.service;
 
-import com.mashibing.apidriver.remote.ServiceUserClient;
+import com.mashibing.apidriver.remote.ServiceDriverUserClient;
 import com.mashibing.internalcommon.dto.DriverUser;
+import com.mashibing.internalcommon.dto.DriverUserWorkStatus;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private ServiceUserClient serviceUserClient;
+    private ServiceDriverUserClient serviceDriverUserClient;
 
     public ResponseResult updateDriverUser(DriverUser driverUser){
-        return serviceUserClient.updateDriverUser(driverUser);
+        return serviceDriverUserClient.updateDriverUser(driverUser);
 
+    }
+    public ResponseResult changeWorkStatus(DriverUserWorkStatus driverUserWorkStatus){
+        return serviceDriverUserClient.changeDriverStatus(driverUserWorkStatus);
     }
 }

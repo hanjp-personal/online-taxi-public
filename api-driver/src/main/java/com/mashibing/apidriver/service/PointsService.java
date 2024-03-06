@@ -1,7 +1,7 @@
 package com.mashibing.apidriver.service;
 
+import com.mashibing.apidriver.remote.ServiceDriverUserClient;
 import com.mashibing.apidriver.remote.ServiceMapClient;
-import com.mashibing.apidriver.remote.ServiceUserClient;
 import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.ApiDriverPointsRequest;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class PointsService {
 
     @Autowired
-    private ServiceUserClient serviceUserClient;
+    private ServiceDriverUserClient serviceDriverUserClient;
 
     @Autowired
     private ServiceMapClient serviceMapClient;
@@ -24,7 +24,7 @@ public class PointsService {
         Long carId = apiDriverPointsRequest.getCarId();
 
         //获取tid，trid
-        ResponseResult<Car> car = serviceUserClient.getCarById(carId);
+        ResponseResult<Car> car = serviceDriverUserClient.getCarById(carId);
         String tid = car.getData().getTid();
         String trid = car.getData().getTrid();
 

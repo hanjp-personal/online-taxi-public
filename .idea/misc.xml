@@ -5,18 +5,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/service-verificationcode/pom.xml" />
-        <option value="$PROJECT_DIR$/internal-common/pom.xml" />
-        <option value="$PROJECT_DIR$/service-passenger-user/pom.xml" />
-        <option value="$PROJECT_DIR$/api-boss/pom.xml" />
-        <option value="$PROJECT_DIR$/api-driver/pom.xml" />
-        <option value="$PROJECT_DIR$/api-passenger/pom.xml" />
-        <option value="$PROJECT_DIR$/service-driver-user/pom.xml" />
-        <option value="$PROJECT_DIR$/service-map/pom.xml" />
-        <option value="$PROJECT_DIR$/service-order/pom.xml" />
-        <option value="$PROJECT_DIR$/service-pay/pom.xml" />
-        <option value="$PROJECT_DIR$/service-price/pom.xml" />
-        <option value="$PROJECT_DIR$/service-sse-push/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,6 +1,6 @@
 package com.mashibing.apidriver.service;
 
-import com.mashibing.apidriver.remote.ServiceUserClient;
+import com.mashibing.apidriver.remote.ServiceDriverUserClient;
 import com.mashibing.apidriver.remote.ServiceVerificationCodeClient;
 import com.mashibing.internalcommon.Response.DriverUserResponse;
 import com.mashibing.internalcommon.Response.NumberCodeResponse;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class VerificationCodeService {
 
     @Autowired
-    private ServiceUserClient serviceUserClient;
+    private ServiceDriverUserClient serviceDriverUserClient;
 
     @Autowired
     private ServiceVerificationCodeClient serviceVerificationCodeClient;
@@ -35,7 +35,7 @@ public class VerificationCodeService {
 
     public ResponseResult checkAndsSendVerificationCode(String driverPhone){
         //查询手机号是否存在
-        ResponseResult<DriverUserResponse> driverUserResponseResponseResult = serviceUserClient.checkDriverUser(driverPhone);
+        ResponseResult<DriverUserResponse> driverUserResponseResponseResult = serviceDriverUserClient.checkDriverUser(driverPhone);
         DriverUserResponse data = driverUserResponseResponseResult.getData();
         Integer ifExsit = data.getState();
         if (ifExsit.intValue() == DriverCarConstants.DRIVER_NOT_EXIST){
