@@ -35,4 +35,8 @@ public class DriverCarBindingRelationshipController {
         return driverCarBindingRelationshipService.unbind(driverCarBindingRelationship);
 
     }
+    @GetMapping("/driver-car-relationship")
+    public ResponseResult getDriverCarBindingRelationship(@RequestParam String driverPhone){
+        return driverCarBindingRelationshipService.getDriverCarBindingRelationship(driverPhone);
+    }
 }

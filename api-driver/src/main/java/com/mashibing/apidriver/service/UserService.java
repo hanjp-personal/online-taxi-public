@@ -20,4 +20,8 @@ public class UserService {
     public ResponseResult changeWorkStatus(DriverUserWorkStatus driverUserWorkStatus){
         return serviceDriverUserClient.changeDriverStatus(driverUserWorkStatus);
     }
+
+    public ResponseResult getDriverCarBindingRelationship(String driverPhone){
+        return serviceDriverUserClient.getDriverCarBindingRelationship(driverPhone);
+    }
 }

@@ -20,5 +20,8 @@ public interface ServiceDriverUserClient {
     public ResponseResult<Car> getCarById(@RequestParam Long carId);
 
     @RequestMapping(method = RequestMethod.POST,value = "/driver-user-work-status")
-    public ResponseResult changeDriverStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus)  ;
+    public ResponseResult changeDriverStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus);
+
+    @RequestMapping(method = RequestMethod.GET,value = "/driver-car-binding-relationship/driver-car-relationship")
+    public ResponseResult getDriverCarBindingRelationship(@RequestParam String driverPhone);
 }
