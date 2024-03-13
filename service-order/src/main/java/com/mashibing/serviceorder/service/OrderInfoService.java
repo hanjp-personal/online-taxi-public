@@ -296,6 +296,7 @@ public class OrderInfoService {
 
                     //通知司机
                     JSONObject driverContent = new JSONObject();
+                    driverContent.put("orderId",orderInfo.getId());
                     driverContent.put("passengerId",orderInfo.getPassengerId());
                     driverContent.put("passengerPhone",orderInfo.getPassengerPhone());
                     driverContent.put("departure",orderInfo.getDeparture());
@@ -309,6 +310,7 @@ public class OrderInfoService {
 
                     //通知乘客
                     JSONObject passengerContent = new JSONObject();
+                    passengerContent.put("orderId",orderInfo.getId());
                     passengerContent.put("driverId",orderInfo.getDriverId());
                     passengerContent.put("driverPhone",orderInfo.getDriverPhone());
                     passengerContent.put("vehicleNo",orderInfo.getVehicleNo());
