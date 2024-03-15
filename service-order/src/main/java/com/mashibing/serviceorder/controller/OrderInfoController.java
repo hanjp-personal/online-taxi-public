@@ -64,10 +64,33 @@ public class OrderInfoController {
         return orderInfoService.passengerGetoff(orderRequest);
     }
 
+    /**
+     * 司机发起付款
+     * @param orderRequest
+     * @return
+     */
+    @PostMapping("/update-pay-info")
+    public ResponseResult updatePayInfo(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.updatePayInfo(orderRequest);
+
+    }
+
+    /**
+     * 支付完成
+     * @param orderRequest
+     * @return
+     */
     @PostMapping("/pay")
     public ResponseResult pay(@RequestBody OrderRequest orderRequest){
         return orderInfoService.pay(orderRequest);
     }
+
+    /**
+     * 订单取消
+     * @param orderId
+     * @param identity
+     * @return
+     */
     @PostMapping("/cancel")
     public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identity){
         return orderInfoService.cancel(orderId,identity);

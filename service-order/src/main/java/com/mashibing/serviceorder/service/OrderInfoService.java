@@ -522,4 +522,11 @@ public class OrderInfoService {
         return ResponseResult.success("");
     }
 
- }
+    public ResponseResult updatePayInfo(OrderRequest orderRequest) {
+        Long orderId = orderRequest.getOrderId();
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        orderInfo.setOrderStatus(OrderConstants.TO_START_PAY);
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
+}

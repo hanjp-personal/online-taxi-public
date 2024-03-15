@@ -15,9 +15,15 @@ public class PayController {
     @Autowired
     private PayService payService;
 
-
+    /**
+     * 司机发起收款
+     * @param orderId
+     * @param price
+     * @param passengerId
+     * @return
+     */
     @PostMapping("/push-pay-info")
-    public ResponseResult pushPayInfo(@RequestParam String orderId, @RequestParam String price, @RequestParam Long passengerId){
+    public ResponseResult pushPayInfo(@RequestParam Long orderId, @RequestParam String price, @RequestParam Long passengerId){
 
         return payService.pushPayInfo(orderId,price,passengerId);
 
