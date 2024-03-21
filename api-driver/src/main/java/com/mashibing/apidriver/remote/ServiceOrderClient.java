@@ -28,6 +28,6 @@ public interface ServiceOrderClient {
     @RequestMapping(method = RequestMethod.GET,value = "/order/detail")
     public ResponseResult<OrderInfo> detail(@RequestParam Long orderId);
 
-
-
+    @RequestMapping(method = RequestMethod.GET, value = "/order/current")
+    ResponseResult<OrderInfo> current(@RequestParam String phone, @RequestParam String identity);
 }

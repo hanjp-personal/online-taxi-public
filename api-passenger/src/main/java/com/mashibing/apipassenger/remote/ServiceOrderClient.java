@@ -1,5 +1,6 @@
 package com.mashibing.apipassenger.remote;
 
+import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,4 +18,6 @@ public interface ServiceOrderClient {
     public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identity);
     @RequestMapping(method = RequestMethod.GET,value = "/order/detail")
     public ResponseResult detail(@RequestParam Long orderId);
+    @RequestMapping(method = RequestMethod.GET,value = "/order/current")
+    ResponseResult<OrderInfo> current(@RequestParam String phone, @RequestParam String identity);
 }

@@ -104,6 +104,18 @@ public class OrderInfoController {
      */
     @GetMapping("/detail")
     public ResponseResult<OrderInfo> detail(@RequestParam Long orderId){
+
         return orderInfoService.detail(orderId);
+    }
+
+    /**
+     * 查询正在进行的订单
+     * @param phone
+     * @param identity
+     * @return
+     */
+    @GetMapping("/current")
+    public ResponseResult<OrderInfo> current(@RequestParam String phone,@RequestParam String identity){
+        return orderInfoService.current(phone,identity);
     }
 }

@@ -1,6 +1,7 @@
 package com.mashibing.apipassenger.controller;
 
 import com.mashibing.apipassenger.service.OrderService;
+import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,24 @@ public class OrderController {
     public ResponseResult cancel(@RequestParam Long orderId){
         return orderService.cancel(orderId);
     }
+
+    /**
+     * 查询订单详情
+     * @param orderId
+     * @return
+     */
     @GetMapping("/detail")
     public ResponseResult detail(@RequestParam Long orderId){
         return orderService.detail(orderId);
+    }
+    /**
+     * 查询正在进行的订单
+     * @param phone
+     * @param identity
+     * @return
+     */
+    @GetMapping("/current")
+    public ResponseResult<OrderInfo> current(@RequestParam String phone, @RequestParam String identity) {
+        return orderService.current(phone,identity);
     }
 }

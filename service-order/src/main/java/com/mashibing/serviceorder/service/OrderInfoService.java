@@ -534,4 +534,32 @@ public class OrderInfoService {
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
         return ResponseResult.success(orderInfo);
     }
+
+    public ResponseResult<OrderInfo> current(String phone, String identity) {
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+
+        if (identity.equals(IdentityConstants.DRIVER_IDENTITY)){
+            queryWrapper.eq("driver_phone",phone);
+            queryWrapper.and(wrapper->wrapper
+                    .eq("order_status",OrderConstants.DRIVER_RECEIVE_ORDER)
+                    .or().eq("order_status",OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                    .or().eq("order_status",OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                    .or().eq("order_status",OrderConstants.PICK_UP_PASSENGER)
+            );
+        }
+        if(identity.equals(IdentityConstants.PASSENGER_IDENTITY)){
+            queryWrapper.eq("passenger_phone",phone);
+            queryWrapper.and(wrapper->wrapper.eq("order_status", OrderConstants.ORDER_START)
+                    .or().eq("order_status",OrderConstants.DRIVER_RECEIVE_ORDER)
+                    .or().eq("order_status",OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                    .or().eq("order_status",OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                    .or().eq("order_status",OrderConstants.PICK_UP_PASSENGER)
+                    .or().eq("order_status",OrderConstants.PASSENGER_GETOFF)
+                    .or().eq("order_status",OrderConstants.TO_START_PAY)
+            );
+        }
+        System.out.println(queryWrapper.getSqlSelect());
+        OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
+        return ResponseResult.success(orderInfo);
+    }
 }

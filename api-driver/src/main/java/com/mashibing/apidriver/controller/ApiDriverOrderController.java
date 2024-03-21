@@ -1,6 +1,7 @@
 package com.mashibing.apidriver.controller;
 
 import com.mashibing.apidriver.service.ApiDriverOrderInfoService;
+import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +72,9 @@ public class ApiDriverOrderController {
     @GetMapping("/detail")
     public ResponseResult detail(@RequestParam Long orderId){
         return apiDriverOrderInfoService.detail(orderId);
+    }
+    @GetMapping("/current")
+    public ResponseResult<OrderInfo> current(@RequestParam String phone, @RequestParam String identity){
+        return apiDriverOrderInfoService.current(phone,identity);
     }
 }
