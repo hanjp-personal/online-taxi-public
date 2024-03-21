@@ -15,4 +15,6 @@ public interface ServiceOrderClient {
     public String dispatchRealTimeOrder(@PathVariable("orderId") Long orderId);
     @RequestMapping(method = RequestMethod.POST,value = "/order/cancel")
     public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identity);
+    @RequestMapping(method = RequestMethod.GET,value = "/order/detail")
+    public ResponseResult detail(@RequestParam Long orderId);
 }

@@ -57,5 +57,12 @@ public class ApiDriverOrderInfoService {
         return serviceOrderClient.cancel(orderId, IdentityConstants.DRIVER_IDENTITY);
     }
 
-
+    /**
+     * 订单详情
+     * @param orderId
+     * @return
+     */
+    public ResponseResult detail(Long orderId) {
+        return serviceOrderClient.detail(orderId);
+    }
 }

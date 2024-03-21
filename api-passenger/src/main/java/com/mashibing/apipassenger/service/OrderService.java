@@ -21,4 +21,8 @@ public class OrderService {
     public ResponseResult cancel(Long orderId){
         return serviceOrderClient.cancel(orderId, IdentityConstants.PASSENGER_IDENTITY);
     }
+
+    public ResponseResult detail(Long orderId) {
+        return serviceOrderClient.detail(orderId);
+    }
 }

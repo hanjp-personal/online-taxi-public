@@ -1,5 +1,6 @@
 package com.mashibing.serviceorder.controller;
 
+import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.serviceorder.service.OrderInfoService;
@@ -94,5 +95,15 @@ public class OrderInfoController {
     @PostMapping("/cancel")
     public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identity){
         return orderInfoService.cancel(orderId,identity);
+    }
+
+    /**
+     * 订单详情
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/detail")
+    public ResponseResult<OrderInfo> detail(@RequestParam Long orderId){
+        return orderInfoService.detail(orderId);
     }
 }

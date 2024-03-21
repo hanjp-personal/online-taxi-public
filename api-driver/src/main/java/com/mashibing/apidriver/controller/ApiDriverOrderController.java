@@ -63,4 +63,13 @@ public class ApiDriverOrderController {
         return apiDriverOrderInfoService.cancel(orderId);
     }
 
+    /**
+     * 订单详情
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/detail")
+    public ResponseResult detail(@RequestParam Long orderId){
+        return apiDriverOrderInfoService.detail(orderId);
+    }
 }

@@ -32,6 +32,8 @@ public class OrderController {
     public ResponseResult cancel(@RequestParam Long orderId){
         return orderService.cancel(orderId);
     }
-
-
+    @GetMapping("/detail")
+    public ResponseResult detail(@RequestParam Long orderId){
+        return orderService.detail(orderId);
+    }
 }

@@ -529,4 +529,9 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
+
+    public ResponseResult<OrderInfo> detail(Long orderId) {
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        return ResponseResult.success(orderInfo);
+    }
 }
