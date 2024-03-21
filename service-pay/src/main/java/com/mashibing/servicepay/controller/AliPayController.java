@@ -35,6 +35,7 @@ public class AliPayController {
 
     @PostMapping("/notify")
     public String notify(HttpServletRequest request) throws Exception {
+        System.out.println("支付宝回调 notify");
         String tradeStatus = request.getParameter("trade_status");
 
         if (tradeStatus.trim().equals("TRADE_SUCCESS")){

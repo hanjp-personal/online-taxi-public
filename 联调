@@ -1,0 +1,33 @@
+整体联调：
+
+乘客端：
+
+手机号：15293168155
+验证码：
+accessToken：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlblR5cGUiOiJhY2Nlc3NUb2tlbiIsIlBob25lIjoiMTUyOTMxNjgxNTUiLCJUb2tlblRpbWUiOiJXZWQgTWFyIDA2IDExOjQyOjIxIENTVCAyMDI0IiwiSWRlbnRpdHkiOiIxIn0.jZrILDXNn6W_es3zFtEfsT0hdUFz06NF0dZy_J4jHTw
+
+{
+    "depLongitude": "116.32",
+    "deplatitude": "39.90",
+    "destLongitude": "116.31",
+    "destlatitude": "39.92",
+    "cityCode": "110000",
+    "vehicleType":1
+}
+
+
+司机端：
+手机号：15293168100
+验证码：
+accessToken：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlblR5cGUiOiJhY2Nlc3NUb2tlbiIsIlBob25lIjoiMTUyOTMxNjgxMDAiLCJUb2tlblRpbWUiOiJXZWQgTWFyIDA2IDIwOjIyOjI4IENTVCAyMDI0IiwiSWRlbnRpdHkiOiIyIn0.EM2sTQMsu6J2OR9tHkvwmGgNE1UWrAaRx7U0SnujKl8
+
+司机经过地点经纬度
+116.32,39.90
+116.31,39.90
+116.31,39.91
+116.31,39.92
+116.31,39.93
+
+订单：
+"orderId":1767843964162600961
+

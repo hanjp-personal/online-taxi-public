@@ -1,0 +1,6 @@
+---
+http://localhost:9001/alipay/pay?subject=订单费用&outTradeNo=1767843964162600971&totalAmount=10.62
+
+subject：车费名称
+outTradeNo：订单编号
+Amount：订单金额
